@@ -1,0 +1,38 @@
+Usuario:
+
+String: nombre
+String: apellido
+String: telefono
+String: codigo
+historial: historialPrestamo
+
+Libro: 
+
+String: titulo
+String autor
+String: genero
+usuario: usuario
+cantidadCopias: int
+anioPublicacion: Date
+
+
+EstadoLibro: 
+
+String: Prestamo/Devolucion
+libro: libro
+String: fechaPrestamo
+String: fechaDevolucion
+usuario: usuario  
+
+Historial de cambios en el sistema y de renta de libros
+
+historialTransacciones:
+
+fecha:
+accion:
+prestamo: prestamoActual
+devolucion: devolucionPendiente
+usuario: usuarioActual
+
+
+

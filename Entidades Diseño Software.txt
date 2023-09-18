@@ -1,0 +1,50 @@
+Entidades:
+
+Usuarios: 
+
+String: Nombre
+String: Apellido
+String: Codigo
+String: Telefono
+Prestamo: historialPrestamo
+
+Admin:
+
+String: Nombre
+String: Apellido
+String: Codigo
+String: Telefono
+Prestamo: historialPrestamo
+
+Libros: 
+
+String: titulo
+
+String: autor
+String: Genero
+String: AñoPublicacion
+int: copiasDisponibles
+
+Prestamo:
+
+String: detallesLibro
+String: fechaPrestamo
+String: fechaVencimiento
+libro: libroPrestado
+usuarios: usuario
+
+
+
+Devolucion:
+
+String: detallesLibro
+String: fechaPrestamo
+String: fechaVencimiento
+libro: libroPrestado
+usuarios: usuario
+
+transacciones:
+prestamo: prestamoAnterior
+devolucion: devolucionAnterior
+usuarios: usuario
+admin: administrador
