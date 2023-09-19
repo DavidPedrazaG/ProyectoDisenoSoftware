@@ -14,7 +14,7 @@ import view.resources.classes.TextBubbleBorder;
  * @author david
  */
 public class Main extends javax.swing.JFrame {
-
+    
     private MainController controller;
     private AbstractBorder border = new TextBubbleBorder(new Color(0, 0, 0),1,30,0); 
     private int xMouse, yMouse;
@@ -236,8 +236,8 @@ public class Main extends javax.swing.JFrame {
         
         boolean res = controller.login(code, password);
         if(res){
-            ManageUsers manageUsers = new ManageUsers(code);
-            manageUsers.setVisible(true);
+            Menu menu = new Menu(code);
+            menu.setVisible(true);
             this.dispose();
         }else{
             System.out.println("Naaaaaaaa");            

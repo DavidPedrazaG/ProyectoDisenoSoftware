@@ -4,7 +4,7 @@
  */
 package models;
 
-import java.util.Date;
+import java.sql.Date;
 
 /**
  *
@@ -32,6 +32,16 @@ public class Book {
         this.publicationYear = publicationYear;
     }
 
+    public Book(String title, String writer, String gender, int quantityCopies, Date publicationYear) {
+        this.title = title;
+        this.writer = writer;
+        this.gender = gender;
+        this.quantityCopies = quantityCopies;
+        this.publicationYear = publicationYear;
+    }
+    
+    
+    
     public String getCode() {
         return code;
     }
