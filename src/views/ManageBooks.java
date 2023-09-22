@@ -8,7 +8,9 @@ import controllers.ManageBooksController;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 import models.Book;
 
 
@@ -20,15 +22,18 @@ public class ManageBooks extends javax.swing.JFrame {
     private String codeLogIn;
     private SimpleDateFormat year = new SimpleDateFormat("yyyy");
     private ManageBooksController controller;
+    private DefaultTableModel model;
+    private ArrayList<Object[]> books;
     /**
      * Creates new form ManageBooks
      */
     public ManageBooks(String code) {
         initComponents();
-        
+        model = (DefaultTableModel) JTblBooks.getModel();
         this.codeLogIn = code;
         controller = new ManageBooksController();
-        
+        books = controller.list("-1");
+        updateTable();
     }
 
     /**
@@ -157,6 +162,11 @@ public class ManageBooks extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        JTblBooks.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                JTblBooksMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(JTblBooks);
 
         jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 80, -1, -1));
@@ -205,6 +215,8 @@ public class ManageBooks extends javax.swing.JFrame {
             Date publicationYear = new java.sql.Date(publicationYearUt.getTime());
             Book book = new Book( title, writer, gender, quantityCopies,publicationYear);
             controller.guardar(book);
+            books = controller.list("-1");
+            updateTable();
         } catch (ParseException ex) {
         }
     }//GEN-LAST:event_InsertBtnActionPerformed
@@ -218,7 +230,8 @@ public class ManageBooks extends javax.swing.JFrame {
         }
         String code = JTxtCodigo.getText();
         controller.eliminar(code);
-       
+        books = controller.list(code);
+        updateTable();
     }//GEN-LAST:event_DeleteBtnActionPerformed
 
     private void EditBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EditBtnActionPerformed
@@ -238,23 +251,21 @@ public class ManageBooks extends javax.swing.JFrame {
             Date publicationYear = new java.sql.Date(publicationYearUt.getTime());
             Book book = new Book(code, title, writer, gender, quantityCopies,publicationYear);
             controller.editar(book);
+            books = controller.list("-1");
+            updateTable();
         } catch (ParseException ex) {
         }
     }//GEN-LAST:event_EditBtnActionPerformed
 
     private void SearchBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SearchBtnActionPerformed
         // TODO add your handling code here:
-        if(JTxtCodigo.getText().isEmpty()){
-            JOptionPane.showMessageDialog(this, "Debe completar todos los campos");
+        if(JTxtSearchBar.getText().isEmpty()){
+            JOptionPane.showMessageDialog(this, "Por favor escriba el codigo a buscar");
             return;
         }
-         String code = JTxtCodigo.getText();
-        Book book = controller.buscar(code);
-        JTxtTitulo.setText(book.getTitle());
-        JTxtEscritor.setText(book.getWriter());
-        JTxtGenero.setText(book.getGender());
-        JTxtCantidad.setText(String.valueOf(book.getQuantityCopies()));
-        JTxtPublicacion.setText(year.format(book.getPublicationYear()));
+        String code = JTxtSearchBar.getText();
+        books = controller.list(code);
+        updateTable();
     }//GEN-LAST:event_SearchBtnActionPerformed
 
     private void JBtnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JBtnVolverActionPerformed
@@ -266,6 +277,33 @@ public class ManageBooks extends javax.swing.JFrame {
         
     }//GEN-LAST:event_JBtnVolverActionPerformed
 
+    private void JTblBooksMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_JTblBooksMouseClicked
+        // TODO add your handling code here:
+        int row = JTblBooks.getSelectedRow();
+        JTxtCodigo.setText(model.getValueAt(row, 0).toString());
+        JTxtTitulo.setText(model.getValueAt(row, 1).toString());
+        JTxtEscritor.setText(model.getValueAt(row, 2).toString());
+        JTxtGenero.setText(model.getValueAt(row, 3).toString());
+        JTxtCantidad.setText(model.getValueAt(row, 4).toString());
+        JTxtPublicacion.setText(model.getValueAt(row, 5).toString());
+    }//GEN-LAST:event_JTblBooksMouseClicked
+
+    private void updateTable(){
+        try {
+            for (int i = 0; i < 10; i++) {
+                for (int j = 0; j < model.getRowCount(); j++) {
+                    model.removeRow(j);
+                }
+            }
+        } catch (Exception e) {
+        }try {
+            for (int i = 0; i < books.size(); i++) {
+                model.addRow(books.get(i));
+            }
+        } catch (Exception e) {
+        }
+    }
+    
     /**
      * @param args the command line arguments
      */
