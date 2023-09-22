@@ -5,7 +5,6 @@
 package services;
 
 import conecction.Supabase;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,7 +19,6 @@ import models.Book;
 public class BookServices {
 
     private static final BookServices INSTANCE = new BookServices();
-    public static final String WHERECODE = "WHERE code = ";
     private Statement stmt = getStatement();
     private ResultSet rs = null;
 
@@ -39,9 +37,13 @@ public class BookServices {
         }
     }
 
-    public ResultSet searchBook(String where, String atributes) {
+    public ResultSet searchBook(String code) {
+        String where = "";
+        if(Integer.parseInt(code) >0){
+            where = "WHERE code = "+code+"";
+        }
         try {
-            rs = stmt.executeQuery("SELECT * FROM books" + where);
+            rs = stmt.executeQuery("SELECT * FROM books " + where);
             return rs;
         } catch (SQLException ex) {
             ex.printStackTrace();
