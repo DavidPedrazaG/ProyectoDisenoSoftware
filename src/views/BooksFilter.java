@@ -41,13 +41,13 @@ public class BooksFilter extends javax.swing.JFrame {
         JTblCategoria.setBackground(new java.awt.Color(204, 213, 174));
         JTblCategoria.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "Categoria", "Producto"
+                "Categoria", "Libros", "Titulo", "Escritor", "Catidad"
             }
         ));
         jScrollPane1.setViewportView(JTblCategoria);

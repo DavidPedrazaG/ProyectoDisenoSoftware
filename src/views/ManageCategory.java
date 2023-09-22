@@ -4,17 +4,29 @@
  */
 package views;
 
+import controllers.ManageGendersController;
+import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import javax.swing.JOptionPane;
+import models.Gender;
+
 /**
  *
  * @author Clara Elizabeth
  */
 public class ManageCategory extends javax.swing.JFrame {
-
+     private String codeLogIn;
+    private SimpleDateFormat year = new SimpleDateFormat("yyyy");
+    private ManageGendersController controller;
     /**
      * Creates new form ManageCategory
      */
-    public ManageCategory() {
+    public ManageCategory(String code) {
         initComponents();
+        
+        this.codeLogIn = code;
+        controller = new ManageGendersController();
     }
 
     /**
@@ -64,15 +76,30 @@ public class ManageCategory extends javax.swing.JFrame {
 
         JBtnGuardar.setBackground(new java.awt.Color(212, 163, 115));
         JBtnGuardar.setText("Guardar");
+        JBtnGuardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JBtnGuardarActionPerformed(evt);
+            }
+        });
 
         JBtnBuscar.setBackground(new java.awt.Color(212, 163, 115));
         JBtnBuscar.setText("Buscar");
 
         JBtnEditar.setBackground(new java.awt.Color(212, 163, 115));
         JBtnEditar.setText("Editar");
+        JBtnEditar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JBtnEditarActionPerformed(evt);
+            }
+        });
 
         JBtnEliminar.setBackground(new java.awt.Color(212, 163, 115));
         JBtnEliminar.setText("Eliminar");
+        JBtnEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JBtnEliminarActionPerformed(evt);
+            }
+        });
 
         JTxtBuscar.setBackground(new java.awt.Color(204, 213, 174));
 
@@ -149,6 +176,44 @@ public class ManageCategory extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void JBtnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JBtnGuardarActionPerformed
+        // TODO add your handling code here:
+        
+        if( JTxtNombre.getText().isEmpty()){
+            JOptionPane.showMessageDialog(this, "Debe completar todos los campos");
+            return;
+        }
+        String Nombre = JTxtNombre.getText();
+        Gender gender = new Gender(Nombre);
+        controller.guardar(gender);
+        JOptionPane.showMessageDialog(this, "Genero añadida");
+    }//GEN-LAST:event_JBtnGuardarActionPerformed
+
+    private void JBtnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JBtnEditarActionPerformed
+        // TODO add your handling code here:
+        if(JTxtCodigo.getText().isEmpty() || JTxtNombre.getText().isEmpty() ){
+            JOptionPane.showMessageDialog(this, "Debe completar todos los campos");
+            return;
+        }
+        int code = Integer.parseInt(JTxtCodigo.getText());
+        String nombre = JTxtNombre.getText();
+        Gender gender = new Gender(code,nombre);
+        controller.editar(gender);
+         JOptionPane.showMessageDialog(this, "Genero editada");
+    }//GEN-LAST:event_JBtnEditarActionPerformed
+
+    private void JBtnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JBtnEliminarActionPerformed
+        // TODO add your handling code here:
+        
+        if(JTxtCodigo.getText().isEmpty()){
+            JOptionPane.showMessageDialog(this, "Debe completar todos los campos");
+            return;
+        }
+        String code = JTxtCodigo.getText();
+        controller.eliminar(code);
+         JOptionPane.showMessageDialog(this, "Genero eliminada");
+    }//GEN-LAST:event_JBtnEliminarActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -177,11 +242,7 @@ public class ManageCategory extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new ManageCategory().setVisible(true);
-            }
-        });
+        
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
