@@ -8,6 +8,7 @@ import conecction.Supabase;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.PreparedStatement;
 
 /**
  *
@@ -46,5 +47,46 @@ public class GenderServices {
             ex.printStackTrace();
         }
         return null;
+    }
+    
+    public void createGender(Gender gender){
+        try {
+            String sql = "INSERT INTO genders (name) VALUES(?)";
+            PreparedStatement preparedStatement = new Supabase().connect().prepareStatement(sql);
+
+
+            preparedStatement.setString(1, gender.getNombre());
+
+
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } 
+    }
+
+    public void updateGender(Gender gender){
+        try{
+            String sql = "update genders set name = ?  where id = ?";
+            PreparedStatement preparedStatement = new Supabase().connect().prepareStatement(sql);
+
+            preparedStatement.setString(2, String.valueOf(gender.getId()));
+            preparedStatement.setString(1, gender.getNombre());
+
+
+            preparedStatement.executeUpdate();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void deleteGender(String code){
+        try{
+            String sql = "delete from genders where id=?";
+            PreparedStatement preparedStatement = new Supabase().connect().prepareStatement(sql);
+            preparedStatement.setString(1, code);
+            preparedStatement.executeUpdate();
+        } catch (SQLException ex) {
+        }
     }
 }
