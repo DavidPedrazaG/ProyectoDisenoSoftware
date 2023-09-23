@@ -25,29 +25,22 @@ public class ManageBooksController {
     public ManageBooksController() {
     }
     
-    public Book buscar(String code){
+    public ArrayList<Object[]> getGenders(){
+        ArrayList<Object[]> genders = new ArrayList<>();
         try {
-            ResultSet rs = BookServices.getINSTANCE().searchBook(code);
+            ResultSet rs = GenderServices.getINSTANCE().searchGender(-1);
             while(rs.next()){
-                String title = rs.getString("title");
-                String writer = rs.getString("Writer");
-                int gender = rs.getInt("Gender");
-                ResultSet rsG = GenderServices.getINSTANCE().searchGender(gender);
-                String genderS = "";
-                while(rsG.next()){
-                    genderS = rsG.getString("name");
-                }
-                int quantityCopies = rs.getInt("quantityCopies");
-                Date publicationYear= rs.getDate("publication_year");
-                Book book = new Book(code, title, writer, genderS, quantityCopies,publicationYear);
-                return book;
+                int code = rs.getInt("id");
+                String name = rs.getString("name");
+                Object[] ob = {code, name};
+                genders.add(ob);
             }
         } catch (SQLException ex) {
         }
-        return null;
+        return genders;
     }
     
-    public ArrayList<Object[]> list(String codeS){
+    public ArrayList<Object[]> list(int codeS){
         ArrayList<Object[]> books = new ArrayList<>();
         try {
             ResultSet rs = BookServices.getINSTANCE().searchBook(codeS);
@@ -82,7 +75,7 @@ public class ManageBooksController {
         BookServices.getINSTANCE().updateBook(book);
     }
     
-    public void eliminar(String code){
+    public void eliminar(int code){
         BookServices.getINSTANCE().deleteBook(code);
     }
    

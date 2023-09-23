@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.PreparedStatement;
+import javax.swing.JOptionPane;
 import models.Gender;
 
 /**
@@ -60,9 +61,11 @@ public class GenderServices {
 
 
             preparedStatement.executeUpdate();
+            JOptionPane.showMessageDialog(null, "Se guardó el genero", "Exito", JOptionPane.INFORMATION_MESSAGE);
 
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+
         } 
     }
 
@@ -71,23 +74,29 @@ public class GenderServices {
             String sql = "update genders set name = ?  where id = ?";
             PreparedStatement preparedStatement = new Supabase().connect().prepareStatement(sql);
 
-            preparedStatement.setString(2, String.valueOf(gender.getId()));
+            preparedStatement.setInt(2, gender.getId());
             preparedStatement.setString(1, gender.getNombre());
 
 
             preparedStatement.executeUpdate();
+            JOptionPane.showMessageDialog(null, "Se actualizó el genero", "Exito", JOptionPane.INFORMATION_MESSAGE);
+
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+
         }
     }
 
-    public void deleteGender(String code){
+    public void deleteGender(int code){
         try{
             String sql = "delete from genders where id=?";
             PreparedStatement preparedStatement = new Supabase().connect().prepareStatement(sql);
-            preparedStatement.setString(1, code);
+            preparedStatement.setInt(1, code);
             preparedStatement.executeUpdate();
+            JOptionPane.showMessageDialog(null, "Se elimino el genero", "Exito", JOptionPane.INFORMATION_MESSAGE);
         } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            
         }
     }
 }

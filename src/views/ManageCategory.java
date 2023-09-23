@@ -5,10 +5,10 @@
 package views;
 
 import controllers.ManageGendersController;
-import java.sql.Date;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 import models.Gender;
 
 /**
@@ -19,14 +19,18 @@ public class ManageCategory extends javax.swing.JFrame {
      private String codeLogIn;
     private SimpleDateFormat year = new SimpleDateFormat("yyyy");
     private ManageGendersController controller;
+    private DefaultTableModel model;
+    private ArrayList<Object[]> genders;
     /**
      * Creates new form ManageCategory
      */
     public ManageCategory(String code) {
         initComponents();
-        
+        model = (DefaultTableModel) JTblCategoria.getModel();
         this.codeLogIn = code;
         controller = new ManageGendersController();
+        genders = controller.buscar(-1);
+        updateTable();
     }
 
     /**
@@ -38,41 +42,26 @@ public class ManageCategory extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel1 = new javax.swing.JPanel();
+        JBtnGuardar = new javax.swing.JButton();
+        JBtnEliminar = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        JTxtBuscar = new javax.swing.JTextField();
+        JTxtCodigo = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        JBtnBuscar = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+        JBtnEditar = new javax.swing.JButton();
+        JTxtNombre = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         JTblCategoria = new javax.swing.JTable();
-        jLabel1 = new javax.swing.JLabel();
-        JTxtNombre = new javax.swing.JTextField();
-        jLabel2 = new javax.swing.JLabel();
-        JBtnGuardar = new javax.swing.JButton();
-        JBtnBuscar = new javax.swing.JButton();
-        JBtnEditar = new javax.swing.JButton();
-        JBtnEliminar = new javax.swing.JButton();
-        JTxtBuscar = new javax.swing.JTextField();
-        jLabel3 = new javax.swing.JLabel();
-        JTxtCodigo = new javax.swing.JTextField();
+        JBtnVolver = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(250, 237, 205));
 
-        JTblCategoria.setBackground(new java.awt.Color(204, 213, 174));
-        JTblCategoria.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null}
-            },
-            new String [] {
-                "Codigo", "Categoria"
-            }
-        ));
-        jScrollPane1.setViewportView(JTblCategoria);
-
-        jLabel1.setText("Registrar categoria:");
-
-        JTxtNombre.setBackground(new java.awt.Color(204, 213, 174));
-
-        jLabel2.setText("Nombre:");
+        jPanel1.setBackground(new java.awt.Color(250, 237, 205));
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         JBtnGuardar.setBackground(new java.awt.Color(212, 163, 115));
         JBtnGuardar.setText("Guardar");
@@ -81,17 +70,7 @@ public class ManageCategory extends javax.swing.JFrame {
                 JBtnGuardarActionPerformed(evt);
             }
         });
-
-        JBtnBuscar.setBackground(new java.awt.Color(212, 163, 115));
-        JBtnBuscar.setText("Buscar");
-
-        JBtnEditar.setBackground(new java.awt.Color(212, 163, 115));
-        JBtnEditar.setText("Editar");
-        JBtnEditar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                JBtnEditarActionPerformed(evt);
-            }
-        });
+        jPanel1.add(JBtnGuardar, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 270, -1, -1));
 
         JBtnEliminar.setBackground(new java.awt.Color(212, 163, 115));
         JBtnEliminar.setText("Eliminar");
@@ -100,77 +79,85 @@ public class ManageCategory extends javax.swing.JFrame {
                 JBtnEliminarActionPerformed(evt);
             }
         });
+        jPanel1.add(JBtnEliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 270, -1, -1));
+
+        jLabel1.setText("Registrar categoria:");
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 70, -1, -1));
 
         JTxtBuscar.setBackground(new java.awt.Color(204, 213, 174));
+        jPanel1.add(JTxtBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 40, 271, -1));
+
+        JTxtCodigo.setEditable(false);
+        JTxtCodigo.setBackground(new java.awt.Color(204, 213, 174));
+        jPanel1.add(JTxtCodigo, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 150, 196, -1));
 
         jLabel3.setText("Codigo:");
+        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 150, -1, -1));
 
-        JTxtCodigo.setBackground(new java.awt.Color(204, 213, 174));
+        JBtnBuscar.setBackground(new java.awt.Color(212, 163, 115));
+        JBtnBuscar.setText("Buscar");
+        JBtnBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JBtnBuscarActionPerformed(evt);
+            }
+        });
+        jPanel1.add(JBtnBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 40, -1, -1));
+
+        jLabel2.setText("Nombre:");
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 180, -1, 20));
+
+        JBtnEditar.setBackground(new java.awt.Color(212, 163, 115));
+        JBtnEditar.setText("Editar");
+        JBtnEditar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JBtnEditarActionPerformed(evt);
+            }
+        });
+        jPanel1.add(JBtnEditar, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 270, -1, -1));
+
+        JTxtNombre.setBackground(new java.awt.Color(204, 213, 174));
+        jPanel1.add(JTxtNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 180, 198, -1));
+
+        JTblCategoria.setBackground(new java.awt.Color(204, 213, 174));
+        JTblCategoria.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Codigo", "Categoria"
+            }
+        ));
+        JTblCategoria.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                JTblCategoriaMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(JTblCategoria);
+
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(298, 77, 440, 280));
+
+        JBtnVolver.setBackground(new java.awt.Color(212, 163, 115));
+        JBtnVolver.setIcon(new javax.swing.ImageIcon(getClass().getResource("/views/resources/imgs/backIcon.png"))); // NOI18N
+        JBtnVolver.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JBtnVolverActionPerformed(evt);
+            }
+        });
+        jPanel1.add(JBtnVolver, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 80, 30));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
-                        .addComponent(JTxtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel3)
-                        .addGap(36, 36, 36)
-                        .addComponent(JTxtCodigo))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(JBtnGuardar)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(JBtnEliminar))
-                            .addComponent(JBtnEditar))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(73, 73, 73)
-                        .addComponent(JTxtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 271, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(20, 20, 20)
-                        .addComponent(JBtnBuscar))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(0, 0, 0))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(JBtnBuscar)
-                        .addComponent(JTxtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(51, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(JTxtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel2))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel3)
-                            .addComponent(JTxtCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(JBtnEditar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(JBtnGuardar)
-                            .addComponent(JBtnEliminar))
-                        .addGap(46, 46, 46))))
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 405, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
@@ -186,7 +173,8 @@ public class ManageCategory extends javax.swing.JFrame {
         String Nombre = JTxtNombre.getText();
         Gender gender = new Gender(Nombre);
         controller.guardar(gender);
-        JOptionPane.showMessageDialog(this, "Genero añadida");
+        genders = controller.buscar(-1);
+        updateTable();
     }//GEN-LAST:event_JBtnGuardarActionPerformed
 
     private void JBtnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JBtnEditarActionPerformed
@@ -199,7 +187,8 @@ public class ManageCategory extends javax.swing.JFrame {
         String nombre = JTxtNombre.getText();
         Gender gender = new Gender(code,nombre);
         controller.editar(gender);
-         JOptionPane.showMessageDialog(this, "Genero editada");
+        genders = controller.buscar(-1);
+        updateTable();
     }//GEN-LAST:event_JBtnEditarActionPerformed
 
     private void JBtnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JBtnEliminarActionPerformed
@@ -209,11 +198,55 @@ public class ManageCategory extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Debe completar todos los campos");
             return;
         }
-        String code = JTxtCodigo.getText();
+        int code = Integer.parseInt(JTxtCodigo.getText());
         controller.eliminar(code);
-         JOptionPane.showMessageDialog(this, "Genero eliminada");
+        genders = controller.buscar(-1);
+        updateTable();
     }//GEN-LAST:event_JBtnEliminarActionPerformed
 
+    private void JBtnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JBtnVolverActionPerformed
+        // TODO add your handling code here:
+
+        Menu menu = new Menu(codeLogIn);
+        menu.setVisible(true);
+        this.dispose();
+
+    }//GEN-LAST:event_JBtnVolverActionPerformed
+
+    private void JBtnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JBtnBuscarActionPerformed
+        // TODO add your handling code here:
+        int code = -1;
+        if(!JTxtBuscar.getText().isEmpty()){
+            code = Integer.parseInt(JTxtBuscar.getText());
+        }
+        genders = controller.buscar(code);
+        updateTable();
+    }//GEN-LAST:event_JBtnBuscarActionPerformed
+
+    private void JTblCategoriaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_JTblCategoriaMouseClicked
+        // TODO add your handling code here:
+        int row = JTblCategoria.getSelectedRow();
+        JTxtCodigo.setText(model.getValueAt(row, 0).toString());
+        JTxtNombre.setText(model.getValueAt(row, 1).toString());
+    }//GEN-LAST:event_JTblCategoriaMouseClicked
+
+    private void updateTable(){
+        try {
+            for (int i = 0; i < 10; i++) {
+                for (int j = 0; j < model.getRowCount(); j++) {
+                    model.removeRow(j);
+                }
+            }
+        } catch (Exception e) {
+        }
+        try {
+            for (int i = 0; i < genders.size(); i++) {
+                model.addRow(genders.get(i));
+            }
+        } catch (Exception e) {
+        }
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -250,6 +283,7 @@ public class ManageCategory extends javax.swing.JFrame {
     private javax.swing.JButton JBtnEditar;
     private javax.swing.JButton JBtnEliminar;
     private javax.swing.JButton JBtnGuardar;
+    private javax.swing.JButton JBtnVolver;
     private javax.swing.JTable JTblCategoria;
     private javax.swing.JTextField JTxtBuscar;
     private javax.swing.JTextField JTxtCodigo;
@@ -257,6 +291,7 @@ public class ManageCategory extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 }

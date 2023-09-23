@@ -24,6 +24,7 @@ public class ManageBooks extends javax.swing.JFrame {
     private ManageBooksController controller;
     private DefaultTableModel model;
     private ArrayList<Object[]> books;
+    private ArrayList<Object[]> genders;
     /**
      * Creates new form ManageBooks
      */
@@ -32,8 +33,10 @@ public class ManageBooks extends javax.swing.JFrame {
         model = (DefaultTableModel) JTblBooks.getModel();
         this.codeLogIn = code;
         controller = new ManageBooksController();
-        books = controller.list("-1");
+        books = controller.list(-1);
         updateTable();
+        genders = controller.getGenders();
+        updateGenders();
     }
 
     /**
@@ -56,7 +59,6 @@ public class ManageBooks extends javax.swing.JFrame {
         JTxtTitulo = new javax.swing.JTextField();
         JTxtPublicacion = new javax.swing.JTextField();
         JTxtEscritor = new javax.swing.JTextField();
-        JTxtGenero = new javax.swing.JTextField();
         JTxtCantidad = new javax.swing.JTextField();
         EditBtn = new javax.swing.JButton();
         InsertBtn = new javax.swing.JButton();
@@ -66,6 +68,7 @@ public class ManageBooks extends javax.swing.JFrame {
         JTblBooks = new javax.swing.JTable();
         JBtnVolver = new javax.swing.JButton();
         JTxtSearchBar = new javax.swing.JTextField();
+        genderCmb = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -102,9 +105,6 @@ public class ManageBooks extends javax.swing.JFrame {
 
         JTxtEscritor.setBackground(new java.awt.Color(204, 213, 174));
         jPanel1.add(JTxtEscritor, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 210, 210, -1));
-
-        JTxtGenero.setBackground(new java.awt.Color(204, 213, 174));
-        jPanel1.add(JTxtGenero, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 280, 210, -1));
 
         JTxtCantidad.setBackground(new java.awt.Color(204, 213, 174));
         jPanel1.add(JTxtCantidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 350, 210, -1));
@@ -183,6 +183,9 @@ public class ManageBooks extends javax.swing.JFrame {
         JTxtSearchBar.setBackground(new java.awt.Color(204, 213, 174));
         jPanel1.add(JTxtSearchBar, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 40, 330, -1));
 
+        genderCmb.setBackground(new java.awt.Color(204, 213, 174));
+        jPanel1.add(genderCmb, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 280, 210, -1));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -201,21 +204,21 @@ public class ManageBooks extends javax.swing.JFrame {
         try {
             // TODO add your handling code here:
             
-            if( JTxtTitulo.getText().isEmpty() || JTxtEscritor.getText().isEmpty() || JTxtGenero.getText().isEmpty() || JTxtCantidad.getText().isEmpty() || JTxtPublicacion.getText().isEmpty()){
+            if( JTxtTitulo.getText().isEmpty() || JTxtEscritor.getText().isEmpty() || genderCmb.getSelectedIndex() == -1 || JTxtCantidad.getText().isEmpty() || JTxtPublicacion.getText().isEmpty()){
                 JOptionPane.showMessageDialog(this, "Debe completar todos los campos");
                 return;
             }
             
             String title = JTxtTitulo.getText();
             String writer = JTxtEscritor.getText();
-            String gender = JTxtGenero.getText();
+            int gender = Integer.parseInt(genders.get(genderCmb.getSelectedIndex())[0].toString());
             int quantityCopies =  Integer.parseInt(JTxtCantidad.getText());
             String publicationYearS = JTxtPublicacion.getText();
             java.util.Date publicationYearUt = year.parse(publicationYearS);
             Date publicationYear = new java.sql.Date(publicationYearUt.getTime());
             Book book = new Book( title, writer, gender, quantityCopies,publicationYear);
             controller.guardar(book);
-            books = controller.list("-1");
+            books = controller.list(-1);
             updateTable();
         } catch (ParseException ex) {
         }
@@ -228,7 +231,7 @@ public class ManageBooks extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Debe completar todos los campos");
             return;
         }
-        String code = JTxtCodigo.getText();
+        int code = Integer.parseInt(JTxtCodigo.getText());
         controller.eliminar(code);
         books = controller.list(code);
         updateTable();
@@ -237,21 +240,21 @@ public class ManageBooks extends javax.swing.JFrame {
     private void EditBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EditBtnActionPerformed
         try {
             // TODO add your handling code here:
-            if(JTxtCodigo.getText().isEmpty() || JTxtTitulo.getText().isEmpty() || JTxtEscritor.getText().isEmpty() || JTxtGenero.getText().isEmpty() || JTxtCantidad.getText().isEmpty() || JTxtPublicacion.getText().isEmpty()){
+            if(JTxtCodigo.getText().isEmpty() || JTxtTitulo.getText().isEmpty() || JTxtEscritor.getText().isEmpty() || genderCmb.getSelectedIndex() == -1 || JTxtCantidad.getText().isEmpty() || JTxtPublicacion.getText().isEmpty()){
                 JOptionPane.showMessageDialog(this, "Debe completar todos los campos");
                 return;
             }
-            String code = JTxtCodigo.getText();
+            int code = Integer.parseInt(JTxtCodigo.getText());
             String title = JTxtTitulo.getText();
             String writer = JTxtEscritor.getText();
-            String gender = JTxtGenero.getText();
+            int gender = Integer.parseInt(genders.get(genderCmb.getSelectedIndex())[0].toString());
             int quantityCopies =  Integer.parseInt(JTxtCantidad.getText());
             String publicationYearS = JTxtPublicacion.getText();
             java.util.Date publicationYearUt = year.parse(publicationYearS);
             Date publicationYear = new java.sql.Date(publicationYearUt.getTime());
             Book book = new Book(code, title, writer, gender, quantityCopies,publicationYear);
             controller.editar(book);
-            books = controller.list("-1");
+            books = controller.list(-1);
             updateTable();
         } catch (ParseException ex) {
         }
@@ -259,11 +262,10 @@ public class ManageBooks extends javax.swing.JFrame {
 
     private void SearchBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SearchBtnActionPerformed
         // TODO add your handling code here:
-        if(JTxtSearchBar.getText().isEmpty()){
-            JOptionPane.showMessageDialog(this, "Por favor escriba el codigo a buscar");
-            return;
+        int code = -1;
+        if(!JTxtSearchBar.getText().isEmpty()){
+            code = Integer.parseInt(JTxtSearchBar.getText());
         }
-        String code = JTxtSearchBar.getText();
         books = controller.list(code);
         updateTable();
     }//GEN-LAST:event_SearchBtnActionPerformed
@@ -283,7 +285,7 @@ public class ManageBooks extends javax.swing.JFrame {
         JTxtCodigo.setText(model.getValueAt(row, 0).toString());
         JTxtTitulo.setText(model.getValueAt(row, 1).toString());
         JTxtEscritor.setText(model.getValueAt(row, 2).toString());
-        JTxtGenero.setText(model.getValueAt(row, 3).toString());
+        genderCmb.setSelectedItem(model.getValueAt(row, 3).toString());
         JTxtCantidad.setText(model.getValueAt(row, 4).toString());
         JTxtPublicacion.setText(model.getValueAt(row, 5).toString());
     }//GEN-LAST:event_JTblBooksMouseClicked
@@ -302,6 +304,16 @@ public class ManageBooks extends javax.swing.JFrame {
             }
         } catch (Exception e) {
         }
+    }
+    
+    private void updateGenders(){
+        try {
+            for (int i = 0; i < genders.size(); i++) {
+                genderCmb.addItem(genders.get(i)[1].toString());
+            }
+        } catch (Exception e) {
+        }
+        genderCmb.setSelectedIndex(-1);
     }
     
     /**
@@ -344,11 +356,11 @@ public class ManageBooks extends javax.swing.JFrame {
     private javax.swing.JTextField JTxtCantidad;
     private javax.swing.JTextField JTxtCodigo;
     private javax.swing.JTextField JTxtEscritor;
-    private javax.swing.JTextField JTxtGenero;
     private javax.swing.JTextField JTxtPublicacion;
     private javax.swing.JTextField JTxtSearchBar;
     private javax.swing.JTextField JTxtTitulo;
     private javax.swing.JButton SearchBtn;
+    private javax.swing.JComboBox<String> genderCmb;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

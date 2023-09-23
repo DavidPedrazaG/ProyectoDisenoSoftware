@@ -8,6 +8,7 @@ import models.User;
 import services.UserServices;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,21 +21,23 @@ public class ManageUsersController {
     public ManageUsersController() {
     }
     
-    public User buscar(String code){
+    public ArrayList<Object[]> buscar(String codeS){
+        ArrayList<Object[]> users = new ArrayList<>();
         try {
-            ResultSet rs = UserServices.getINSTANCE().searchUser(UserServices.WHERECODE + "'"+code+"'", "*");
+            ResultSet rs = UserServices.getINSTANCE().searchUser(codeS);
             while(rs.next()){
+                String code = rs.getString("id");
                 String name = rs.getString("name");
                 String lastname = rs.getString("lastname");
                 String cellphone = rs.getString("cellphone");
                 String password = rs.getString("password");
                 
-                User user = new User(code, name, lastname, cellphone, password);
-                return user;
+                Object[] ob = {code, name, lastname, cellphone, password};
+                users.add(ob);
             }
         } catch (SQLException ex) {
         }
-        return null;
+        return users;
     }
     
     public void guardar(User user){

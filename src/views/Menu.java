@@ -39,6 +39,8 @@ public class Menu extends javax.swing.JFrame {
         jSeparator3 = new javax.swing.JSeparator();
         jButton1 = new javax.swing.JButton();
         jSeparator4 = new javax.swing.JSeparator();
+        JBtnFilter = new javax.swing.JButton();
+        jSeparator5 = new javax.swing.JSeparator();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -55,7 +57,7 @@ public class Menu extends javax.swing.JFrame {
                 JBtnLibroActionPerformed(evt);
             }
         });
-        jPanel1.add(JBtnLibro, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 130, 130, -1));
+        jPanel1.add(JBtnLibro, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 210, 130, -1));
 
         JBtnUsuario.setBackground(new java.awt.Color(212, 163, 115));
         JBtnUsuario.setText("Usuario");
@@ -64,10 +66,10 @@ public class Menu extends javax.swing.JFrame {
                 JBtnUsuarioActionPerformed(evt);
             }
         });
-        jPanel1.add(JBtnUsuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 220, 130, -1));
+        jPanel1.add(JBtnUsuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 80, 130, -1));
 
         jSeparator2.setForeground(new java.awt.Color(0, 0, 0));
-        jPanel1.add(jSeparator2, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 170, 130, 10));
+        jPanel1.add(jSeparator2, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 250, 130, 10));
 
         JBtnVolver.setBackground(new java.awt.Color(212, 163, 115));
         JBtnVolver.setIcon(new javax.swing.ImageIcon(getClass().getResource("/views/resources/imgs/backIcon.png"))); // NOI18N
@@ -79,7 +81,7 @@ public class Menu extends javax.swing.JFrame {
         jPanel1.add(JBtnVolver, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, -1, 30));
 
         jSeparator3.setForeground(new java.awt.Color(0, 0, 0));
-        jPanel1.add(jSeparator3, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 340, 130, 10));
+        jPanel1.add(jSeparator3, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 190, 130, 10));
 
         jButton1.setBackground(new java.awt.Color(212, 163, 115));
         jButton1.setText("Categoria");
@@ -88,10 +90,22 @@ public class Menu extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 300, 130, -1));
+        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 150, 130, -1));
 
         jSeparator4.setForeground(new java.awt.Color(0, 0, 0));
-        jPanel1.add(jSeparator4, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 260, 130, 10));
+        jPanel1.add(jSeparator4, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 120, 130, 10));
+
+        JBtnFilter.setBackground(new java.awt.Color(212, 163, 115));
+        JBtnFilter.setText("Filter");
+        JBtnFilter.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JBtnFilterActionPerformed(evt);
+            }
+        });
+        jPanel1.add(JBtnFilter, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 280, 130, -1));
+
+        jSeparator5.setForeground(new java.awt.Color(0, 0, 0));
+        jPanel1.add(jSeparator5, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 320, 130, 10));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -140,6 +154,13 @@ public class Menu extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void JBtnFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JBtnFilterActionPerformed
+        // TODO add your handling code here:
+        BooksFilter bf = new BooksFilter(codeLogIn);
+        bf.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_JBtnFilterActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -172,6 +193,7 @@ public class Menu extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton JBtnFilter;
     private javax.swing.JButton JBtnLibro;
     private javax.swing.JButton JBtnUsuario;
     private javax.swing.JButton JBtnVolver;
@@ -181,5 +203,6 @@ public class Menu extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JSeparator jSeparator4;
+    private javax.swing.JSeparator jSeparator5;
     // End of variables declaration//GEN-END:variables
 }

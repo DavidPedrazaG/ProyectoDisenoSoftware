@@ -12,10 +12,10 @@ import java.sql.Date;
  */
 public class Book {
     
-    private String code;
+    private int code;
     private String title;
     private String writer;
-    private String gender;
+    private int gender;
     private int quantityCopies;
     private Date publicationYear;
     private BookStatus status;
@@ -23,7 +23,7 @@ public class Book {
     public Book() {
     }
 
-    public Book(String code, String title, String writer, String gender, int quantityCopies, Date publicationYear) {
+    public Book(int code, String title, String writer, int gender, int quantityCopies, Date publicationYear) {
         this.code = code;
         this.title = title;
         this.writer = writer;
@@ -32,7 +32,7 @@ public class Book {
         this.publicationYear = publicationYear;
     }
 
-    public Book(String title, String writer, String gender, int quantityCopies, Date publicationYear) {
+    public Book(String title, String writer, int gender, int quantityCopies, Date publicationYear) {
         this.title = title;
         this.writer = writer;
         this.gender = gender;
@@ -42,7 +42,7 @@ public class Book {
     
     
     
-    public String getCode() {
+    public int getCode() {
         return code;
     }
 
@@ -62,11 +62,11 @@ public class Book {
         this.writer = writer;
     }
 
-    public String getGender() {
+    public int getGender() {
         return gender;
     }
 
-    public void setGender(String gender) {
+    public void setGender(int gender) {
         this.gender = gender;
     }
 

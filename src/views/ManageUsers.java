@@ -5,7 +5,9 @@
 package views;
 
 import controllers.ManageUsersController;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 import models.User;
 
 /**
@@ -17,6 +19,8 @@ public class ManageUsers extends javax.swing.JFrame {
     private ManageUsersController controller;
     private int xMouse, yMouse;
     private String codeLogIn;
+    private ArrayList<Object[]> users;
+    private DefaultTableModel model;
     
     /**
      * Creates new form ManageUsers
@@ -25,6 +29,9 @@ public class ManageUsers extends javax.swing.JFrame {
         initComponents();
         this.codeLogIn = codeLogIn;
         controller = new ManageUsersController();
+        users = controller.buscar("");
+        model = (DefaultTableModel) JTblUsers.getModel();
+        updateTable();
     }
 
     /**
@@ -54,10 +61,10 @@ public class ManageUsers extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         JTblUsers = new javax.swing.JTable();
         windowBar = new javax.swing.JPanel();
-        JBtnVolver = new javax.swing.JButton();
         closeBtn = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
         JTxtSearchBar = new javax.swing.JTextField();
+        JBtnVolver = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -90,7 +97,7 @@ public class ManageUsers extends javax.swing.JFrame {
                 updateBtnActionPerformed(evt);
             }
         });
-        mainPanel.add(updateBtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 450, -1, -1));
+        mainPanel.add(updateBtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 410, -1, -1));
 
         deleteBtn.setBackground(new java.awt.Color(212, 163, 115));
         deleteBtn.setText("Eliminar");
@@ -99,7 +106,7 @@ public class ManageUsers extends javax.swing.JFrame {
                 deleteBtnActionPerformed(evt);
             }
         });
-        mainPanel.add(deleteBtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 450, -1, -1));
+        mainPanel.add(deleteBtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 410, -1, -1));
 
         insertBtn.setBackground(new java.awt.Color(212, 163, 115));
         insertBtn.setText("Guardar");
@@ -108,7 +115,7 @@ public class ManageUsers extends javax.swing.JFrame {
                 insertBtnActionPerformed(evt);
             }
         });
-        mainPanel.add(insertBtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 450, -1, -1));
+        mainPanel.add(insertBtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 410, -1, -1));
 
         jLabel1.setText("Telefono:");
         mainPanel.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 290, 100, -1));
@@ -154,6 +161,11 @@ public class ManageUsers extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        JTblUsers.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                JTblUsersMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(JTblUsers);
 
         mainPanel.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 140, 500, -1));
@@ -170,28 +182,15 @@ public class ManageUsers extends javax.swing.JFrame {
             }
         });
 
-        JBtnVolver.setBackground(new java.awt.Color(212, 163, 115));
-        JBtnVolver.setIcon(new javax.swing.ImageIcon(getClass().getResource("/views/resources/imgs/backIcon.png"))); // NOI18N
-        JBtnVolver.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                JBtnVolverActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout windowBarLayout = new javax.swing.GroupLayout(windowBar);
         windowBar.setLayout(windowBarLayout);
         windowBarLayout.setHorizontalGroup(
             windowBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(windowBarLayout.createSequentialGroup()
-                .addGap(16, 16, 16)
-                .addComponent(JBtnVolver, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(784, Short.MAX_VALUE))
+            .addGap(0, 880, Short.MAX_VALUE)
         );
         windowBarLayout.setVerticalGroup(
             windowBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(windowBarLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(JBtnVolver, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGap(0, 40, Short.MAX_VALUE)
         );
 
         mainPanel.add(windowBar, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 880, 40));
@@ -213,6 +212,15 @@ public class ManageUsers extends javax.swing.JFrame {
 
         JTxtSearchBar.setBackground(new java.awt.Color(204, 213, 174));
         mainPanel.add(JTxtSearchBar, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 100, 380, -1));
+
+        JBtnVolver.setBackground(new java.awt.Color(212, 163, 115));
+        JBtnVolver.setIcon(new javax.swing.ImageIcon(getClass().getResource("/views/resources/imgs/backIcon.png"))); // NOI18N
+        JBtnVolver.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JBtnVolverActionPerformed(evt);
+            }
+        });
+        mainPanel.add(JBtnVolver, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 80, 34));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -244,6 +252,8 @@ public class ManageUsers extends javax.swing.JFrame {
         String password = txtPassword.getText();
         User user = new User(code, name, lastname, cellphone, password);
         controller.guardar(user);
+        users = controller.buscar("");
+        updateTable();
     }//GEN-LAST:event_insertBtnActionPerformed
 
     private void deleteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteBtnActionPerformed
@@ -259,6 +269,8 @@ public class ManageUsers extends javax.swing.JFrame {
             main.setVisible(true);
             this.dispose();
         }
+        users = controller.buscar("");
+        updateTable();
     }//GEN-LAST:event_deleteBtnActionPerformed
 
     private void updateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateBtnActionPerformed
@@ -274,21 +286,15 @@ public class ManageUsers extends javax.swing.JFrame {
         String password = txtPassword.getText();
         User user = new User(code, name, lastname, cellphone, password);
         controller.editar(user);
+        users = controller.buscar("");
+        updateTable();
     }//GEN-LAST:event_updateBtnActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        if(txtCode.getText().isEmpty()){
-            JOptionPane.showMessageDialog(this, "Debe completar todos los campos");
-            return;
-        }
-        String code = txtCode.getText();
-        User user = controller.buscar(code);
-        txtName.setText(user.getName());
-        txtLastName.setText(user.getLastname());
-        txtTelefono.setText(user.getCellphone());
-        txtPassword.setText(user.getPassword());
-        
+        String code = JTxtSearchBar.getText();
+        users = controller.buscar(code);
+        updateTable();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void txtTelefonoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTelefonoKeyTyped
@@ -327,6 +333,33 @@ public class ManageUsers extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_JBtnVolverActionPerformed
 
+    private void JTblUsersMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_JTblUsersMouseClicked
+        // TODO add your handling code here:
+        int row = JTblUsers.getSelectedRow();
+        txtCode.setText(model.getValueAt(row, 0).toString());
+        txtName.setText(model.getValueAt(row, 1).toString());
+        txtLastName.setText(model.getValueAt(row, 2).toString());
+        txtTelefono.setText(model.getValueAt(row, 3).toString());
+        txtPassword.setText(model.getValueAt(row, 4).toString());
+
+    }//GEN-LAST:event_JTblUsersMouseClicked
+
+    private void updateTable(){
+        try {
+            for (int i = 0; i < 10; i++) {
+                for (int j = 0; j < model.getRowCount(); j++) {
+                    model.removeRow(j);
+                }
+            }
+        } catch (Exception e) {
+        }try {
+            for (int i = 0; i < users.size(); i++) {
+                model.addRow(users.get(i));
+            }
+        } catch (Exception e) {
+        }
+    }
+    
     /**
      * @param args the command line arguments
      */

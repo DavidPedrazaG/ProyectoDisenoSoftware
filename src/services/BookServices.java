@@ -9,6 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import javax.swing.JOptionPane;
 import models.Book;
 
 
@@ -37,9 +38,9 @@ public class BookServices {
         }
     }
 
-    public ResultSet searchBook(String code) {
+    public ResultSet searchBook(int code) {
         String where = "";
-        if(Integer.parseInt(code) >0){
+        if(code >0){
             where = "WHERE code = "+code+"";
         }
         try {
@@ -59,42 +60,46 @@ public class BookServices {
             
             preparedStatement.setString(1, book.getTitle());
             preparedStatement.setString(2, book.getWriter());
-            preparedStatement.setString(3, book.getGender());
+            preparedStatement.setInt(3, book.getGender());
             preparedStatement.setInt(4, book.getQuantityCopies());
             preparedStatement.setDate(5, book.getPublicationYear());
 
             preparedStatement.executeUpdate();
-
+            JOptionPane.showMessageDialog(null, "Se creó el libro", "Exito", JOptionPane.INFORMATION_MESSAGE);
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
     public void updateBook(Book book) {
         try {
-            String sql = "update books set title = ?, writer = ?, gender = ?, quantityCopies = ?, publicationYear = ?  where code = ?";
+            String sql = "update books set title = ?, writer = ?, gender = ?, quantity_copies = ?, publication_year = ?  where code = ?";
             PreparedStatement preparedStatement = new Supabase().connect().prepareStatement(sql);
 
             preparedStatement.setString(1, book.getTitle());
             preparedStatement.setString(2, book.getWriter());
-            preparedStatement.setString(3, book.getGender());
+            preparedStatement.setInt(3, book.getGender());
             preparedStatement.setInt(4, book.getQuantityCopies());
             preparedStatement.setDate(5, book.getPublicationYear());
-
+            preparedStatement.setInt(6, book.getCode());
             preparedStatement.executeUpdate();
+            JOptionPane.showMessageDialog(null, "Se actualizo el libro", "Exito", JOptionPane.INFORMATION_MESSAGE);
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
         
     }    
 
-    public void deleteBook(String code) {
+    public void deleteBook(int code) {
         try {
             String sql = "delete from books where code=?";
             PreparedStatement preparedStatement = new Supabase().connect().prepareStatement(sql);
-            preparedStatement.setString(1, code);
+            preparedStatement.setInt(1, code);
             preparedStatement.executeUpdate();
+            JOptionPane.showMessageDialog(null, "Se eliminó el libro", "Exito", JOptionPane.INFORMATION_MESSAGE);
         } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+
         }
     }
 }

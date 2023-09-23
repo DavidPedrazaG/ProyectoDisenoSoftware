@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.PreparedStatement;
+import javax.swing.JOptionPane;
 import models.User;
 
 /**
@@ -18,7 +19,6 @@ import models.User;
 public class UserServices {
     
     private static final UserServices INSTANCE = new UserServices();
-    public static final String WHERECODE = "WHERE id = ";
     private Statement stmt = getStatement();
     private ResultSet rs = null;
 
@@ -37,12 +37,15 @@ public class UserServices {
         }
     }
     
-    public ResultSet searchUser(String where, String atributes){
+    public ResultSet searchUser(String code){
+        String where = "";
+        if(!"".equals(code)){
+            where = "WHERE id = '"+ code +"'";
+        }
         try {
             rs = stmt.executeQuery("SELECT * FROM users "+where);
             return rs;
         } catch (SQLException ex) {
-            ex.printStackTrace();
         }        
         return null;
     }
@@ -59,9 +62,9 @@ public class UserServices {
             preparedStatement.setString(5, user.getPassword());
 
             preparedStatement.executeUpdate();
-
+            JOptionPane.showMessageDialog(null, "Se creó el usuario", "Exito", JOptionPane.INFORMATION_MESSAGE);
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } 
     }
     
@@ -77,8 +80,9 @@ public class UserServices {
             preparedStatement.setString(5, user.getCode()); 
             
             preparedStatement.executeUpdate();
+            JOptionPane.showMessageDialog(null, "Se actualizó el usuario", "Exito", JOptionPane.INFORMATION_MESSAGE);
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
     
@@ -88,7 +92,9 @@ public class UserServices {
             PreparedStatement preparedStatement = new Supabase().connect().prepareStatement(sql);
             preparedStatement.setString(1, code);
             preparedStatement.executeUpdate();
+            JOptionPane.showMessageDialog(null, "Se elimino el usuario", "Exito", JOptionPane.INFORMATION_MESSAGE);
         } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);            
         }
     }
     
