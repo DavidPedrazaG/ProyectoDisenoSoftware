@@ -7,36 +7,42 @@ package conecction;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-
+ 
 /**
  *
  * @author david
  */
 public class Supabase{
 
-    private final String url = "jdbc:postgresql://db.jhbohvnplmebldlswbwd.supabase.co:5432/postgres?user=postgres&password=JoDa2302@eam.com";
+    private final String url = "jdbc:postgresql://db.hbohvnplmebldlswbwd.supabase.co:5432/postgres?user=postgres&password=JoDa2302@eam.com";
+    private static Supabase INSTANCE;
+    private Connection connection;
 
+    private Supabase() {
+        try {
+            connection = DriverManager.getConnection(url);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+    
+    public static Supabase getINSTANCE() {
+        if(INSTANCE == null){
+            INSTANCE = new Supabase();
+        }
+        return INSTANCE;
+    }       
+
+    public Connection getConnection() {
+        return connection;
+    }        
     /**
      * Connect to the PostgreSQL database
      *
      * @return a Connection object
      */
-    public Connection connect() {
-        Connection conn = null;
-        try {
-            conn = DriverManager.getConnection(url);
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-
-        return conn;
-    }
 
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
-        Supabase app = new Supabase();
-        app.connect();
-    }
 }

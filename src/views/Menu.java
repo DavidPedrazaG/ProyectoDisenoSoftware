@@ -41,6 +41,7 @@ public class Menu extends javax.swing.JFrame {
         jSeparator4 = new javax.swing.JSeparator();
         JBtnFilter = new javax.swing.JButton();
         jSeparator5 = new javax.swing.JSeparator();
+        JBtnLoans = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -107,6 +108,15 @@ public class Menu extends javax.swing.JFrame {
         jSeparator5.setForeground(new java.awt.Color(0, 0, 0));
         jPanel1.add(jSeparator5, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 320, 130, 10));
 
+        JBtnLoans.setBackground(new java.awt.Color(212, 163, 115));
+        JBtnLoans.setText("Prestamos");
+        JBtnLoans.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JBtnLoansActionPerformed(evt);
+            }
+        });
+        jPanel1.add(JBtnLoans, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 350, 130, -1));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -161,6 +171,13 @@ public class Menu extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_JBtnFilterActionPerformed
 
+    private void JBtnLoansActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JBtnLoansActionPerformed
+        // TODO add your handling code here:
+        LoansMenu lm = new LoansMenu(codeLogIn);
+        lm.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_JBtnLoansActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -195,6 +212,7 @@ public class Menu extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton JBtnFilter;
     private javax.swing.JButton JBtnLibro;
+    private javax.swing.JButton JBtnLoans;
     private javax.swing.JButton JBtnUsuario;
     private javax.swing.JButton JBtnVolver;
     private javax.swing.JButton jButton1;

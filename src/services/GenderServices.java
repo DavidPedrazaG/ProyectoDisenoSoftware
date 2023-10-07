@@ -5,6 +5,7 @@
 package services;
 
 import conecction.Supabase;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -18,20 +19,27 @@ import models.Gender;
  */
 public class GenderServices {
     
-    private static final GenderServices INSTANCE = new GenderServices();
-    private Statement stmt = getStatement();
-    private ResultSet rs = null;
+    private static GenderServices INSTANCE;
+    private Statement stmt;
+    private ResultSet rs;
+    private Connection connection;
 
-    public GenderServices() {
+    private GenderServices() {
+        connection = Supabase.getINSTANCE().getConnection();
+        stmt = getStatement();
+        rs = null;
     }
 
     public static GenderServices getINSTANCE() {
+        if(INSTANCE == null){
+            INSTANCE = new GenderServices();
+        }
         return INSTANCE;
-    }        
+    }    
     
-    private Statement getStatement() {
+    private Statement getStatement(){
         try {
-            return new Supabase().connect().createStatement();
+            return connection.createStatement();
         } catch (SQLException ex) {
             return null;
         }
@@ -54,7 +62,7 @@ public class GenderServices {
     public void createGender(Gender gender){
         try {
             String sql = "INSERT INTO genders (name) VALUES(?)";
-            PreparedStatement preparedStatement = new Supabase().connect().prepareStatement(sql);
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
 
             preparedStatement.setString(1, gender.getNombre());
@@ -72,7 +80,7 @@ public class GenderServices {
     public void updateGender(Gender gender){
         try{
             String sql = "update genders set name = ?  where id = ?";
-            PreparedStatement preparedStatement = new Supabase().connect().prepareStatement(sql);
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
             preparedStatement.setInt(2, gender.getId());
             preparedStatement.setString(1, gender.getNombre());
@@ -90,7 +98,7 @@ public class GenderServices {
     public void deleteGender(int code){
         try{
             String sql = "delete from genders where id=?";
-            PreparedStatement preparedStatement = new Supabase().connect().prepareStatement(sql);
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, code);
             preparedStatement.executeUpdate();
             JOptionPane.showMessageDialog(null, "Se elimino el genero", "Exito", JOptionPane.INFORMATION_MESSAGE);

@@ -5,6 +5,7 @@
 package services;
 
 import conecction.Supabase;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -19,20 +20,27 @@ import models.Book;
  */
 public class BookServices {
 
-    private static final BookServices INSTANCE = new BookServices();
-    private Statement stmt = getStatement();
-    private ResultSet rs = null;
+    private static BookServices INSTANCE;
+    private Statement stmt;
+    private ResultSet rs;
+    private Connection connection;
 
-    private BookServices() {
+    private BookServices() {        
+        connection = Supabase.getINSTANCE().getConnection();
+        stmt = getStatement();
+        rs = null;
     }
 
     public static BookServices getINSTANCE() {
+        if(INSTANCE == null){
+            INSTANCE = new BookServices();
+        }
         return INSTANCE;
-    }
-
-    private Statement getStatement() {
+    }    
+    
+    private Statement getStatement(){
         try {
-            return new Supabase().connect().createStatement();
+            return connection.createStatement();
         } catch (SQLException ex) {
             return null;
         }
@@ -55,7 +63,7 @@ public class BookServices {
     public void createBook(Book book) {
         try {
             String sql = "INSERT INTO books ( title, writer, gender, quantity_copies,publication_year) VALUES(?,?,?,?,?)";
-            PreparedStatement preparedStatement = new Supabase().connect().prepareStatement(sql);
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
             
             preparedStatement.setString(1, book.getTitle());
@@ -74,7 +82,7 @@ public class BookServices {
     public void updateBook(Book book) {
         try {
             String sql = "update books set title = ?, writer = ?, gender = ?, quantity_copies = ?, publication_year = ?  where code = ?";
-            PreparedStatement preparedStatement = new Supabase().connect().prepareStatement(sql);
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
             preparedStatement.setString(1, book.getTitle());
             preparedStatement.setString(2, book.getWriter());
@@ -93,7 +101,7 @@ public class BookServices {
     public void deleteBook(int code) {
         try {
             String sql = "delete from books where code=?";
-            PreparedStatement preparedStatement = new Supabase().connect().prepareStatement(sql);
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, code);
             preparedStatement.executeUpdate();
             JOptionPane.showMessageDialog(null, "Se eliminó el libro", "Exito", JOptionPane.INFORMATION_MESSAGE);

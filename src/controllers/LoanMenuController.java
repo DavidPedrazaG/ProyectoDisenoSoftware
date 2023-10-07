@@ -4,22 +4,16 @@
  */
 package controllers;
 
-import models.User;
-import services.UserServices;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import services.UserServices;
 
 /**
  *
  * @author david
  */
-public class ManageUsersController {
-
-    public ManageUsersController() {
-    }
+public class LoanMenuController {
     
     public ArrayList<Object[]> buscar(String codeS){
         ArrayList<Object[]> users = new ArrayList<>();
@@ -39,17 +33,4 @@ public class ManageUsersController {
         }
         return users;
     }
-    
-    public void guardar(User user){
-        UserServices.getINSTANCE().createUser(user);
-    }
-    
-    public void editar(User user){
-        UserServices.getINSTANCE().updateUser(user);
-    }
-    
-    public void eliminar(String code){
-        UserServices.getINSTANCE().deleteUser(code);
-    }
-    
 }

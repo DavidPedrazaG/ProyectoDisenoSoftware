@@ -17,16 +17,18 @@ public class User {
     private String cellphone;
     private ArrayList<History> history;
     private String password;
+    private int loanLimit;
 
     public User() {
     }
 
-    public User(String code, String name, String lastname, String cellphone, String password) {
+    public User(String code, String name, String lastname, String cellphone, String password, int loanLimit) {
         this.code = code;
         this.name = name;
         this.lastname = lastname;
         this.cellphone = cellphone;
         this.password = password;
+        this.loanLimit = loanLimit;
     }
 
     public String getCode() {
@@ -72,6 +74,13 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
-    
-    
+
+    public int getLoanLimit() {
+        return loanLimit;
+    }
+
+    public void setLoanLimit(int loanLimit) {
+        this.loanLimit = loanLimit;
+    }
+        
 }

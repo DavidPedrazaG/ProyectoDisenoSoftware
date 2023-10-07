@@ -18,7 +18,6 @@ public class Book {
     private int gender;
     private int quantityCopies;
     private Date publicationYear;
-    private BookStatus status;
 
     public Book() {
     }
@@ -84,14 +83,6 @@ public class Book {
 
     public void setPublicationYear(Date publicationYear) {
         this.publicationYear = publicationYear;
-    }
-
-    public BookStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(BookStatus status) {
-        this.status = status;
     }
     
 }

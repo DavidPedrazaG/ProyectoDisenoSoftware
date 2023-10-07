@@ -250,7 +250,7 @@ public class ManageUsers extends javax.swing.JFrame {
         String lastname = txtLastName.getText();
         String cellphone = txtTelefono.getText();
         String password = txtPassword.getText();
-        User user = new User(code, name, lastname, cellphone, password);
+        User user = new User(code, name, lastname, cellphone, password, 4);
         controller.guardar(user);
         users = controller.buscar("");
         updateTable();
@@ -284,7 +284,8 @@ public class ManageUsers extends javax.swing.JFrame {
         String lastname = txtLastName.getText();
         String cellphone = txtTelefono.getText();
         String password = txtPassword.getText();
-        User user = new User(code, name, lastname, cellphone, password);
+        int loanLimit = searchLoanLimit(code);
+        User user = new User(code, name, lastname, cellphone, password, loanLimit);
         controller.editar(user);
         users = controller.buscar("");
         updateTable();
@@ -344,6 +345,15 @@ public class ManageUsers extends javax.swing.JFrame {
 
     }//GEN-LAST:event_JTblUsersMouseClicked
 
+    private int searchLoanLimit(String code){
+        for (int i = 0; i < users.size(); i++) {
+            if(users.get(i)[0].toString().equals(code)){
+                return Integer.parseInt(users.get(i)[5].toString());
+            }
+        }
+        return -1;
+    }
+    
     private void updateTable(){
         try {
             for (int i = 0; i < 10; i++) {
