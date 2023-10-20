@@ -6,6 +6,7 @@ package views;
 
 import controllers.MainController;
 import java.awt.Color;
+import javax.swing.JOptionPane;
 import javax.swing.border.AbstractBorder;
 import view.resources.classes.TextBubbleBorder;
 
@@ -240,7 +241,7 @@ public class Main extends javax.swing.JFrame {
             menu.setVisible(true);
             this.dispose();
         }else{
-            System.out.println("Naaaaaaaa");            
+            JOptionPane.showMessageDialog(this, "Usuario y/o contraseña incorectos");
         }
     }//GEN-LAST:event_loginBtnMouseClicked
 

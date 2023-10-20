@@ -107,4 +107,39 @@ public class UserServices {
         }
     }
     
+    public void minusLoanLimit(User user){
+        try{
+            String sql = "update users set loan_limit=?  where id = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, user.getLoanLimit()-1); 
+            preparedStatement.setString(2, user.getCode());             
+            preparedStatement.executeUpdate();
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    public void plusLoanLimit(User user){
+        try{
+            String sql = "update users set loan_limit=?  where id = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, user.getLoanLimit()+1); 
+            preparedStatement.setString(2, user.getCode());             
+            preparedStatement.executeUpdate();
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    public void changeBannStatus(String code, boolean banned){
+        try{
+            String sql = "update users set banned=?  where id = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setBoolean(1, banned); 
+            preparedStatement.setString(2, code);             
+            preparedStatement.executeUpdate();
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
 }

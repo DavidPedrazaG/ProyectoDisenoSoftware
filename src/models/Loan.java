@@ -21,13 +21,23 @@ public class Loan {
     private String status;
     private Date fechaPrestamo;
     private Date fechaDevolucion;
+    private String user;
 
-    public Loan(int code, int book, String status, Date fechaPrestamo, Date fechaDevolucion) {
+    public Loan(int book, String status, Date fechaPrestamo, Date fechaDevolucion, String user) {
+        this.book = book;
+        this.status = status;
+        this.fechaPrestamo = fechaPrestamo;
+        this.fechaDevolucion = fechaDevolucion;
+        this.user = user;
+    }
+    
+    public Loan(int code, int book, String status, Date fechaPrestamo, Date fechaDevolucion, String user) {
         this.code = code;
         this.book = book;
         this.status = status;
         this.fechaPrestamo = fechaPrestamo;
         this.fechaDevolucion = fechaDevolucion;
+        this.user = user;
     }
 
     public int getCode() {
@@ -70,4 +80,12 @@ public class Loan {
         this.fechaDevolucion = fechaDevolucion;
     }
 
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
+    
 }

@@ -38,8 +38,11 @@ public class Book {
         this.quantityCopies = quantityCopies;
         this.publicationYear = publicationYear;
     }
-    
-    
+
+    public Book(int code, int quantityCopies) {
+        this.code = code;
+        this.quantityCopies = quantityCopies;
+    }        
     
     public int getCode() {
         return code;

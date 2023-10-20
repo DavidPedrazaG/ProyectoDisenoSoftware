@@ -3,10 +3,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package controllers;
-
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import models.Loan;
+import services.LoanServices;
 import services.UserServices;
 
 /**
@@ -21,16 +23,34 @@ public class LoanMenuController {
             ResultSet rs = UserServices.getINSTANCE().searchUser(codeS);
             while(rs.next()){
                 String code = rs.getString("id");
-                String name = rs.getString("name");
-                String lastname = rs.getString("lastname");
-                String cellphone = rs.getString("cellphone");
-                String password = rs.getString("password");
                 int loanLimit = rs.getInt("loan_limit");
-                Object[] ob = {code, name, lastname, cellphone, password, loanLimit};
+                boolean banned = rs.getBoolean("banned");
+                Object[] ob = {code, loanLimit, banned};
                 users.add(ob);
             }
         } catch (SQLException ex) {
         }
         return users;
+    }
+    
+    public ArrayList<Object[]> getLoans(String user_id){
+        ArrayList<Object[]> loans = new ArrayList<>();
+        try {
+            ResultSet rs = LoanServices.getINSTANCE().searchLoanByUser(user_id);
+            while(rs.next()){
+                int code = rs.getInt("code");
+                Date fechaDevolucion = rs.getDate("fecha_devolucion");
+                String status = rs.getString("status");
+                Object[] ob = {code, fechaDevolucion, status};
+                loans.add(ob);
+            }
+        } catch (SQLException ex) {
+        }
+        return loans;
+    }
+    
+    public void bannUser(int codeLoan, String user_id){
+        UserServices.getINSTANCE().changeBannStatus(user_id, true);
+        LoanServices.getINSTANCE().changeStatus(codeLoan, Loan.ATRASADO);
     }
 }

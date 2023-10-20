@@ -5,7 +5,10 @@
 package views;
 
 import controllers.LoanMenuController;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
+import java.sql.Date;
+import models.Loan;
 
 /**
  *
@@ -16,6 +19,9 @@ public class LoansMenu extends javax.swing.JFrame {
     
     private String code;
     private LoanMenuController controller;
+    private boolean banned;
+    private int loanLimit;
+    private ArrayList<Object[]> userLoans;
     /**
      * Creates new form MenuAcciones
      */
@@ -23,6 +29,21 @@ public class LoansMenu extends javax.swing.JFrame {
         initComponents();
         this.code = code;
         controller = new LoanMenuController();
+        loanLimit = Integer.parseInt(controller.buscar(code).get(0)[1].toString());
+        userLoans = controller.getLoans(code);
+        for (int i = 0; i < userLoans.size(); i++) {
+            if(userLoans.get(i)[2].toString().equals(Loan.DEVUELTO) || userLoans.get(i)[2].toString().equals(Loan.ATRASADO)){
+                continue;
+            }
+            java.util.Date hoyD = new java.util.Date();
+            int codeLoan = Integer.parseInt(userLoans.get(i)[0].toString());
+            Date hoy = new Date(hoyD.getTime());
+            Date fechaDevolucion = (Date) userLoans.get(i)[1];
+            if(hoy.after(fechaDevolucion)){
+                controller.bannUser(codeLoan, code);
+            }
+        }
+        banned = Boolean.parseBoolean(controller.buscar(code).get(0)[2].toString());
     }
 
     /**
@@ -97,12 +118,13 @@ public class LoansMenu extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void JBtnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JBtnVolverActionPerformed
         // TODO add your handling code here:
 
-        Main main = new Main();
+        Menu main = new Menu(code);
         main.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_JBtnVolverActionPerformed
@@ -116,14 +138,17 @@ public class LoansMenu extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        int loanLimit = Integer.parseInt(controller.buscar(code).get(0)[5].toString());
         if(loanLimit==0){
             JOptionPane.showMessageDialog(this, "Ha alcanzado el limite de prestamos");
-        }else{
-            LoanBook lb = new LoanBook(code);
-            lb.setVisible(true);
-            this.dispose();
+            return;        
+        }        
+        if(banned){
+            JOptionPane.showMessageDialog(this, "No puede realizar prestamos ya que tiene (n) libro(s) sin devolver");
+            return;
         }
+        LoanBook lb = new LoanBook(code);
+        lb.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**

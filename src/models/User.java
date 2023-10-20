@@ -18,6 +18,7 @@ public class User {
     private ArrayList<History> history;
     private String password;
     private int loanLimit;
+    private boolean banned;
 
     public User() {
     }
@@ -31,6 +32,21 @@ public class User {
         this.loanLimit = loanLimit;
     }
 
+    public User(String code, String name, String lastname, String cellphone, String password, int loanLimit, boolean banned) {
+        this.code = code;
+        this.name = name;
+        this.lastname = lastname;
+        this.cellphone = cellphone;
+        this.password = password;
+        this.loanLimit = loanLimit;
+        this.banned = banned;
+    }    
+
+    public User(String code, int loanLimit) {
+        this.code = code;
+        this.loanLimit = loanLimit;
+    }    
+    
     public String getCode() {
         return code;
     }    
@@ -82,5 +98,13 @@ public class User {
     public void setLoanLimit(int loanLimit) {
         this.loanLimit = loanLimit;
     }
-        
+
+    public boolean isBanned() {
+        return banned;
+    }
+
+    public void setBanned(boolean banned) {
+        this.banned = banned;
+    }
+    
 }

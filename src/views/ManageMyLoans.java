@@ -4,6 +4,14 @@
  */
 package views;
 
+import controllers.ManageMyLoansController;
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import models.Book;
+import models.Loan;
+import models.User;
+
 /**
  *
  * @author david
@@ -11,13 +19,20 @@ package views;
 public class ManageMyLoans extends javax.swing.JFrame {
 
     private String code;
-    
+    private ArrayList<Object[]> loans;
+    private DefaultTableModel model;
+    private ManageMyLoansController controller;
+    private int overdueBooks;
     /**
      * Creates new form ManageMyLoans
      */
     public ManageMyLoans(String code) {
         initComponents();
+        controller = new ManageMyLoansController();
         this.code = code;
+        model = (DefaultTableModel) jTable1.getModel();
+        loans = controller.list(code);
+        updateTable();
     }
 
     /**
@@ -40,6 +55,7 @@ public class ManageMyLoans extends javax.swing.JFrame {
         jTextField2 = new javax.swing.JTextField();
         jTextField3 = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
+        JBtnVolver = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -48,10 +64,7 @@ public class ManageMyLoans extends javax.swing.JFrame {
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+
             },
             new String [] {
                 "Codigo del prestamo", "Codigo del libro", "Estado", "Fecha del prestamo", "Fecha de devolucion"
@@ -65,6 +78,11 @@ public class ManageMyLoans extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable1MouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTable1);
 
         jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 90, 800, 270));
@@ -73,9 +91,16 @@ public class ManageMyLoans extends javax.swing.JFrame {
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("Prestamos");
         jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 70, 70, -1));
+
+        jTextField1.setEditable(false);
         jPanel1.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 140, 220, -1));
 
         jButton1.setText("Devolver");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
         jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 300, 130, -1));
 
         jLabel2.setText("Codigo del prestamo: ");
@@ -83,11 +108,24 @@ public class ManageMyLoans extends javax.swing.JFrame {
 
         jLabel3.setText("Codigo del libro:");
         jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 170, -1, -1));
+
+        jTextField2.setEditable(false);
         jPanel1.add(jTextField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 170, 220, -1));
+
+        jTextField3.setEditable(false);
         jPanel1.add(jTextField3, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 200, 220, -1));
 
         jLabel4.setText("Estado:");
         jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 200, -1, -1));
+
+        JBtnVolver.setBackground(new java.awt.Color(212, 163, 115));
+        JBtnVolver.setIcon(new javax.swing.ImageIcon(getClass().getResource("/views/resources/imgs/backIcon.png"))); // NOI18N
+        JBtnVolver.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JBtnVolverActionPerformed(evt);
+            }
+        });
+        jPanel1.add(JBtnVolver, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, -1, 30));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -101,8 +139,75 @@ public class ManageMyLoans extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        int codeL = Integer.parseInt(jTextField1.getText());
+        int codeB = Integer.parseInt(jTextField2.getText());
+        String status = jTextField3.getText();
+        boolean banned = false;
+        Book book = new Book(codeB, Integer.parseInt(controller.getBook(codeB).get(0)[1].toString()));
+        if(status.equals(Loan.DEVUELTO)){
+            JOptionPane.showMessageDialog(this, "El libro ya ha sido devuelto");
+        }
+        if(status.equals(Loan.ATRASADO)){
+            overdueBooks--;
+        }
+        if(!(overdueBooks == 0)){
+            banned = true;
+        }
+        User user = new User(code, Integer.parseInt(controller.getUser(code).get(0)[1].toString()));
+        controller.returnBooks(codeL, book, user, banned);
+        JOptionPane.showMessageDialog(this, "Libro devuelto");
+        loans  = controller.list(code);
+        updateTable();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void JBtnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JBtnVolverActionPerformed
+        // TODO add your handling code here:
+
+        LoansMenu main = new LoansMenu(code);
+        main.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_JBtnVolverActionPerformed
+
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+        // TODO add your handling code here:
+        int row = jTable1.getSelectedRow();        
+        jTextField1.setText(model.getValueAt(row, 0).toString());
+        jTextField2.setText(model.getValueAt(row, 1).toString());
+        jTextField3.setText(model.getValueAt(row, 2).toString());        
+    }//GEN-LAST:event_jTable1MouseClicked
+
+    private void updateTable(){
+        try {
+            for (int i = 0; i < 10; i++) {
+                for (int j = 0; j < model.getRowCount(); j++) {
+                    model.removeRow(j);
+                }
+            }
+        } catch (Exception e) {
+        }try {
+            for (int i = 0; i < loans.size(); i++) {
+                model.addRow(loans.get(i));              
+            }
+        } catch (Exception e) {
+        }
+    }
+    
+    private void getOverdueBooks(){
+        try {
+            for (int j = 0; j < model.getRowCount(); j++) {
+                if(model.getValueAt(j, 2).toString().equals(Loan.ATRASADO)){
+                    overdueBooks++;
+                }
+            }
+        } catch (Exception e) {
+        }
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -134,6 +239,7 @@ public class ManageMyLoans extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton JBtnVolver;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

@@ -101,12 +101,22 @@ public class ManageBooks extends javax.swing.JFrame {
         jPanel1.add(JTxtTitulo, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 140, 210, -1));
 
         JTxtPublicacion.setBackground(new java.awt.Color(204, 213, 174));
+        JTxtPublicacion.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                JTxtPublicacionKeyTyped(evt);
+            }
+        });
         jPanel1.add(JTxtPublicacion, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 410, 210, -1));
 
         JTxtEscritor.setBackground(new java.awt.Color(204, 213, 174));
         jPanel1.add(JTxtEscritor, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 210, 210, -1));
 
         JTxtCantidad.setBackground(new java.awt.Color(204, 213, 174));
+        JTxtCantidad.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                JTxtCantidadKeyTyped(evt);
+            }
+        });
         jPanel1.add(JTxtCantidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 350, 210, -1));
 
         EditBtn.setBackground(new java.awt.Color(212, 163, 115));
@@ -289,6 +299,26 @@ public class ManageBooks extends javax.swing.JFrame {
         JTxtCantidad.setText(model.getValueAt(row, 4).toString());
         JTxtPublicacion.setText(model.getValueAt(row, 5).toString());
     }//GEN-LAST:event_JTblBooksMouseClicked
+
+    private void JTxtCantidadKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_JTxtCantidadKeyTyped
+        // TODO add your handling code here:
+        if(evt.getSource().equals(JTxtCantidad )){
+            Character c = evt.getKeyChar();
+            if(!Character.isDigit(c) && !c.toString().equals("")){
+                evt.consume();
+            }
+        }
+    }//GEN-LAST:event_JTxtCantidadKeyTyped
+
+    private void JTxtPublicacionKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_JTxtPublicacionKeyTyped
+        // TODO add your handling code here:
+        if(evt.getSource().equals(JTxtPublicacion)){
+            Character c = evt.getKeyChar();
+            if(!Character.isDigit(c) && !c.toString().equals("")){
+                evt.consume();
+            }
+        }
+    }//GEN-LAST:event_JTxtPublicacionKeyTyped
 
     private void updateTable(){
         try {

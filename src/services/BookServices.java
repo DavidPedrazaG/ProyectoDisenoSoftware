@@ -110,5 +110,31 @@ public class BookServices {
 
         }
     }
+    
+    public void minusQuantityCopies(Book book){
+        try {
+            String sql = "update books set quantity_copies = ? where code = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            
+            preparedStatement.setInt(1, book.getQuantityCopies()-1);
+            preparedStatement.setInt(2, book.getCode());
+            preparedStatement.executeUpdate();
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    public void plusQuantityCopies(Book book){
+        try {
+            String sql = "update books set quantity_copies = ? where code = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            
+            preparedStatement.setInt(1, book.getQuantityCopies()+1);
+            preparedStatement.setInt(2, book.getCode());
+            preparedStatement.executeUpdate();            
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
 }
 

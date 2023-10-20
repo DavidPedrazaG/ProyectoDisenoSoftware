@@ -4,7 +4,15 @@
  */
 package views;
 
+import controllers.LoanBookController;
 import java.util.ArrayList;
+import java.sql.Date;
+import java.util.Calendar;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import models.Book;
+import models.Loan;
+import models.User;
 
 /**
  *
@@ -12,15 +20,21 @@ import java.util.ArrayList;
  */
 public class LoanBook extends javax.swing.JFrame {
 
-    private String code;
-    private ArrayList<Object[]> libros;
-    
+    private String codeLogIn;
+    private ArrayList<Object[]> books;
+    private DefaultTableModel model;
+    private LoanBookController controller;
+    private int row;
     /**
      * Creates new form LoanBook
      */
     public LoanBook(String code) {
         initComponents();
-        this.code = code;
+        controller = new LoanBookController();
+        this.codeLogIn = code;
+        model = (DefaultTableModel) jTable1.getModel();
+        books = controller.list(-1);
+        updateTable();
     }
 
     /**
@@ -41,6 +55,7 @@ public class LoanBook extends javax.swing.JFrame {
         jTextField2 = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
+        JBtnVolver = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -65,15 +80,40 @@ public class LoanBook extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable1MouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTable1);
 
         jLabel1.setText("Libros");
 
         jButton1.setText("Buscar");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        jTextField2.setEditable(false);
 
         jLabel2.setText("Codigo");
 
         jButton2.setText("Realizar prestamo");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
+        JBtnVolver.setBackground(new java.awt.Color(212, 163, 115));
+        JBtnVolver.setIcon(new javax.swing.ImageIcon(getClass().getResource("/views/resources/imgs/backIcon.png"))); // NOI18N
+        JBtnVolver.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JBtnVolverActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -101,11 +141,17 @@ public class LoanBook extends javax.swing.JFrame {
                             .addComponent(jLabel1))
                         .addGap(57, 57, 57)))
                 .addGap(24, 24, 24))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(19, 19, 19)
+                .addComponent(JBtnVolver)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(43, 43, 43)
+                .addGap(7, 7, 7)
+                .addComponent(JBtnVolver, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton1))
@@ -141,8 +187,68 @@ public class LoanBook extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+        // TODO add your handling code here:
+        row = jTable1.getSelectedRow();
+        jTextField2.setText(model.getValueAt(row, 0).toString());
+    }//GEN-LAST:event_jTable1MouseClicked
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        int codeLibro = Integer.parseInt(jTextField2.getText());
+        java.util.Date fecha = new java.util.Date();
+        Date fechaPrestamo = new Date(fecha.getTime());
+        Calendar c = Calendar.getInstance();
+        c.setTime(fecha);
+        c.add(Calendar.DATE, 7);
+        fecha = c.getTime();    
+        Date fechaDevolucion = new Date(fecha.getTime());
+        Loan loan = new Loan(codeLibro, Loan.PRESTAMO, fechaPrestamo, fechaDevolucion, codeLogIn);
+        User user = controller.searchUser(codeLogIn).get(0);
+        if (user.getLoanLimit() == 0){
+            JOptionPane.showMessageDialog(this, "Ha alcanzado el limite de prestamos");
+            return;
+        }
+        Book book = new Book(Integer.parseInt(books.get(row)[0].toString()), Integer.parseInt(books.get(row)[2].toString()));
+        controller.loanBook(loan, book, user);
+        updateTable();
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void JBtnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JBtnVolverActionPerformed
+        // TODO add your handling code here:
+
+        LoansMenu main = new LoansMenu(codeLogIn);
+        main.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_JBtnVolverActionPerformed
+
+    private void updateTable(){
+        try {
+            for (int i = 0; i < 10; i++) {
+                for (int j = 0; j < model.getRowCount(); j++) {
+                    model.removeRow(j);
+                }
+            }
+        } catch (Exception e) {
+        }try {
+            for (int i = 0; i < books.size(); i++) {
+                if(Integer.parseInt(books.get(i)[2].toString()) > 0){
+                    if(!controller.getLoans(Integer.parseInt(books.get(i)[0].toString()))){
+                        model.addRow(books.get(i));
+                    }
+                }
+            }
+        } catch (Exception e) {
+        }
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -174,6 +280,7 @@ public class LoanBook extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton JBtnVolver;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
