@@ -23,7 +23,7 @@ public class ManageGendersController {
     public ArrayList<Object[]> buscar(int codeInt){
         ArrayList<Object[]> genders = new ArrayList<>();
         try {
-            ResultSet rs = GenderServices.getINSTANCE().searchGender(codeInt);
+            ResultSet rs = GenderServices.getINSTANCE().search(codeInt);
             while(rs.next()){
                 int code = rs.getInt("id");
                 String name = rs.getString("name");
@@ -37,15 +37,15 @@ public class ManageGendersController {
     }
     
     public void guardar(Gender gender){
-        GenderServices.getINSTANCE().createGender(gender);
+        GenderServices.getINSTANCE().create(gender);
     }
     
     public void editar(Gender gender){
-        GenderServices.getINSTANCE().updateGender(gender);
+        GenderServices.getINSTANCE().update(gender);
     }
     
     public void eliminar(int code){
-        GenderServices.getINSTANCE().deleteGender(code);
+        GenderServices.getINSTANCE().delete(code);
     }
     
 }

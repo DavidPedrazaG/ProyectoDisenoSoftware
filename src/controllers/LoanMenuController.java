@@ -20,7 +20,7 @@ public class LoanMenuController {
     public ArrayList<Object[]> buscar(String codeS){
         ArrayList<Object[]> users = new ArrayList<>();
         try {
-            ResultSet rs = UserServices.getINSTANCE().searchUser(codeS);
+            ResultSet rs = UserServices.getINSTANCE().search(codeS);
             while(rs.next()){
                 String code = rs.getString("id");
                 int loanLimit = rs.getInt("loan_limit");

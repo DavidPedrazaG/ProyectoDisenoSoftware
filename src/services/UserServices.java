@@ -6,6 +6,7 @@ package services;
 
 import java.sql.Connection;
 import conecction.Supabase;
+import interfaces.Service;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -17,7 +18,7 @@ import models.User;
  *
  * @author david
  */
-public class UserServices {
+public class UserServices implements Service{
     
     private static UserServices INSTANCE;
     private Statement stmt;
@@ -45,7 +46,9 @@ public class UserServices {
         }
     }
     
-    public ResultSet searchUser(String code){
+    @Override
+    public ResultSet search(Object consult){
+        String code = consult.toString();
         String where = "";
         if(!"".equals(code)){
             where = "WHERE id = '"+ code +"'";
@@ -58,7 +61,9 @@ public class UserServices {
         return null;
     }
     
-    public void createUser(User user){
+    @Override
+    public void create(Object insert){
+        User user = (User) insert;
         try {
             String sql = "INSERT INTO users (id, name, lastname, cellphone, password) VALUES(?,?,?,?,?)";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -76,7 +81,10 @@ public class UserServices {
         } 
     }
     
-    public void updateUser(User user){
+    
+    @Override
+    public void update(Object modify){
+        User user = (User) modify;
         try{
             String sql = "update users set name = ?, lastname = ?, cellphone = ?, password = ?, loan_limit=?  where id = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -95,7 +103,9 @@ public class UserServices {
         }
     }
     
-    public void deleteUser(String code){
+    @Override
+    public void delete(Object eliminate){
+        String code = eliminate.toString();
         try{
             String sql = "delete from users where id=?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);

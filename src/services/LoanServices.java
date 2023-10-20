@@ -5,6 +5,7 @@
 package services;
 
 import conecction.Supabase;
+import interfaces.Service;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -18,7 +19,7 @@ import models.Loan;
  *
  * @author david
  */
-public class LoanServices {
+public class LoanServices implements Service{
     
     private static LoanServices INSTANCE;
     private Statement stmt;
@@ -46,7 +47,9 @@ public class LoanServices {
         }
     }
     
-    public ResultSet searchLoan(int code) {
+    @Override
+    public ResultSet search(Object consult) {
+        int code = Integer.parseInt(consult.toString());
         String where = "";
         if(code >0){
             where = "WHERE code = " + code +"";
@@ -59,6 +62,7 @@ public class LoanServices {
         }
         return null;
     }
+    
     
     public ResultSet searchLoanByUser(String code) {
         String where = "";
@@ -88,7 +92,9 @@ public class LoanServices {
         return null;
     }
     
-    public void createLoan(Loan loan){
+    @Override
+    public void create(Object insert){
+        Loan loan = (Loan) insert;
         try {
             String sql = "INSERT INTO loans (book, status, fecha_prestamo, fecha_devolucion, user_id) VALUES(?,?,?,?,?)";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -106,8 +112,11 @@ public class LoanServices {
             System.out.println(ex.getMessage());
         } 
     }
-
-    public void updateLoan(Loan loan){
+    
+    
+    @Override
+    public void update(Object modify){
+        Loan loan = (Loan) modify;
         try{
             String sql = "update loans set book = ?, fecha_prestamo = ?, fecha_devolucion = ?, status = ?  where code = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -128,7 +137,9 @@ public class LoanServices {
         }
     }
 
-    public void deleteLoan(int code){
+    @Override
+    public void delete(Object eliminate){
+        int code = Integer.parseInt(eliminate.toString());
         try{
             String sql = "delete from loans where code=?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);

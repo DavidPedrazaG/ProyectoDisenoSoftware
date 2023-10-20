@@ -5,6 +5,7 @@
 package services;
 
 import conecction.Supabase;
+import interfaces.Service;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,7 +18,7 @@ import models.Gender;
  *
  * @author david
  */
-public class GenderServices {
+public class GenderServices implements Service {
     
     private static GenderServices INSTANCE;
     private Statement stmt;
@@ -45,7 +46,9 @@ public class GenderServices {
         }
     }
     
-    public ResultSet searchGender(int code) {
+    @Override
+    public ResultSet search(Object consult) {
+        int code = Integer.parseInt(consult.toString());
         String where = "";
         if(code >0){
             where = "WHERE id = " + code +"";
@@ -59,7 +62,10 @@ public class GenderServices {
         return null;
     }
     
-    public void createGender(Gender gender){
+    @Override
+    public void create(Object insert){
+        
+        Gender gender = (Gender) insert;
         try {
             String sql = "INSERT INTO genders (name) VALUES(?)";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -77,7 +83,10 @@ public class GenderServices {
         } 
     }
 
-    public void updateGender(Gender gender){
+    
+    @Override
+    public void update(Object modify){
+        Gender gender = (Gender) modify;
         try{
             String sql = "update genders set name = ?  where id = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -94,8 +103,11 @@ public class GenderServices {
 
         }
     }
-
-    public void deleteGender(int code){
+    
+    
+    @Override
+    public void delete(Object eliminate){
+        int code = Integer.parseInt(eliminate.toString());
         try{
             String sql = "delete from genders where id=?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);

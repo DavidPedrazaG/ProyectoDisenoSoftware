@@ -5,6 +5,7 @@
 package services;
 
 import conecction.Supabase;
+import interfaces.Service;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -18,7 +19,7 @@ import models.Book;
  *
  * @author Clara Elizabeth
  */
-public class BookServices {
+public class BookServices implements Service {
 
     private static BookServices INSTANCE;
     private Statement stmt;
@@ -45,8 +46,11 @@ public class BookServices {
             return null;
         }
     }
-
-    public ResultSet searchBook(int code) {
+    
+    
+    @Override
+    public ResultSet search(Object consult) {
+        int code = Integer.parseInt(consult.toString());
         String where = "";
         if(code >0){
             where = "WHERE code = "+code+"";
@@ -59,8 +63,12 @@ public class BookServices {
         }
         return null;
     }
-
-    public void createBook(Book book) {
+    
+    
+    @Override
+    public void create(Object insert) {
+        
+        Book book = (Book) insert;
         try {
             String sql = "INSERT INTO books ( title, writer, gender, quantity_copies,publication_year) VALUES(?,?,?,?,?)";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -78,8 +86,12 @@ public class BookServices {
             JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-
-    public void updateBook(Book book) {
+    
+    
+    @Override
+    public void update(Object modify) {
+        
+        Book book = (Book) modify;
         try {
             String sql = "update books set title = ?, writer = ?, gender = ?, quantity_copies = ?, publication_year = ?  where code = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -97,8 +109,11 @@ public class BookServices {
         }
         
     }    
-
-    public void deleteBook(int code) {
+    
+    @Override
+    public void delete(Object eliminate) {
+        
+        int code = Integer.parseInt(eliminate.toString());
         try {
             String sql = "delete from books where code=?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);

@@ -24,7 +24,7 @@ public class ManageUsersController {
     public ArrayList<Object[]> buscar(String codeS){
         ArrayList<Object[]> users = new ArrayList<>();
         try {
-            ResultSet rs = UserServices.getINSTANCE().searchUser(codeS);
+            ResultSet rs = UserServices.getINSTANCE().search(codeS);
             while(rs.next()){
                 String code = rs.getString("id");
                 String name = rs.getString("name");
@@ -41,15 +41,15 @@ public class ManageUsersController {
     }
     
     public void guardar(User user){
-        UserServices.getINSTANCE().createUser(user);
+        UserServices.getINSTANCE().create(user);
     }
     
     public void editar(User user){
-        UserServices.getINSTANCE().updateUser(user);
+        UserServices.getINSTANCE().update(user);
     }
     
     public void eliminar(String code){
-        UserServices.getINSTANCE().deleteUser(code);
+        UserServices.getINSTANCE().delete(code);
     }
     
 }

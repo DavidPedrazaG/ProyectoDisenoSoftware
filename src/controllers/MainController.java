@@ -21,7 +21,7 @@ public class MainController {
     }
     
     public boolean login(String code, String password){
-        ResultSet rs = UserServices.getINSTANCE().searchUser(code);
+        ResultSet rs = UserServices.getINSTANCE().search(code);
         if(rs != null){
             try {
                 while(rs.next()){                    

@@ -19,7 +19,7 @@ public class BooksFilterController {
     public ArrayList<Object[]> searchGender(int code){
         ArrayList<Object[]> categories = new ArrayList<>();
         try {
-            ResultSet rs = GenderServices.getINSTANCE().searchGender(code);
+            ResultSet rs = GenderServices.getINSTANCE().search(code);
             while (rs.next()) {
                 int id = rs.getInt("id");
                 String nombre = rs.getString("name");
@@ -34,7 +34,7 @@ public class BooksFilterController {
     public ArrayList<Object[]> searchBook(int code){
         ArrayList<Object[]> products = new ArrayList<>();
         try {
-            ResultSet rs = BookServices.getINSTANCE().searchBook(code);
+            ResultSet rs = BookServices.getINSTANCE().search(code);
             while (rs.next()) {
                 int id = rs.getInt("code");
                 String title = rs.getString("title");

@@ -23,7 +23,7 @@ public class ManageMyLoansController {
     public ArrayList<Object[]> getUser(String codeS){
         ArrayList<Object[]> users = new ArrayList<>();
         try {
-            ResultSet rs = UserServices.getINSTANCE().searchUser(codeS);
+            ResultSet rs = UserServices.getINSTANCE().search(codeS);
             while(rs.next()){
                 String code = rs.getString("id");
                 int loanLimit = rs.getInt("loan_limit");
@@ -38,7 +38,7 @@ public class ManageMyLoansController {
     public ArrayList<Object[]> getBook(int codeS){
         ArrayList<Object[]> books = new ArrayList<>();
         try {
-            ResultSet rs = BookServices.getINSTANCE().searchBook(codeS);
+            ResultSet rs = BookServices.getINSTANCE().search(codeS);
             while(rs.next()){
                 int code = rs.getInt("code");
                 int quantityCopies = rs.getInt("quantity_copies");
