@@ -10,10 +10,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import models.Book;
 import models.Loan;
+import models.TransactionHistory;
 import models.User;
 import services.BookServices;
 import services.GenderServices;
 import services.LoanServices;
+import services.TransactionService;
 import services.UserServices;
 
 /**
@@ -68,11 +70,13 @@ public class LoanBookController {
         return users;
     }
     
-    public void loanBook(Loan loan, Book book, User user){
+    public void loanBook(Loan loan, Book book, User user, String code){
         System.out.println(loan.getUser());
         LoanServices.getINSTANCE().create(loan);
         BookServices.getINSTANCE().minusQuantityCopies(book);
         UserServices.getINSTANCE().minusLoanLimit(user);
+        TransactionHistory th = new TransactionHistory(code, "Pidio prestado un libro");
+        TransactionService.getINSTANCE().create(th);
     }
     
 }

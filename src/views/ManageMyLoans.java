@@ -159,7 +159,7 @@ public class ManageMyLoans extends javax.swing.JFrame {
             banned = true;
         }
         User user = new User(code, Integer.parseInt(controller.getUser(code).get(0)[1].toString()));
-        controller.returnBooks(codeL, book, user, banned);
+        controller.returnBooks(codeL, book, user, banned, code);
         JOptionPane.showMessageDialog(this, "Libro devuelto");
         loans  = controller.list(code);
         updateTable();

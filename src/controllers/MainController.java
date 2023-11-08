@@ -9,6 +9,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import models.TransactionHistory;
+import services.TransactionService;
 import services.UserServices;
 
 /**
@@ -26,6 +28,8 @@ public class MainController {
             try {
                 while(rs.next()){                    
                     if(rs.getString("id").equals(code) && rs.getString("password").equals(password)){
+                        TransactionHistory th = new TransactionHistory(code, "Inició sesión");
+                        TransactionService.getINSTANCE().create(th);
                         return true;
                     }
                 }

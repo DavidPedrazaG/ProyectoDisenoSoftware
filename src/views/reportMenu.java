@@ -4,7 +4,14 @@
  */
 package views;
 
-import controllers.LoanMenuController;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
+import controllers.ReportMenuController;
+import java.awt.HeadlessException;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import java.sql.Date;
@@ -14,37 +21,19 @@ import models.Loan;
  *
  * @author david
  */
-public class LoansMenu extends javax.swing.JFrame {
+public class ReportMenu extends javax.swing.JFrame {
 
     
     private String code;
-    private LoanMenuController controller;
-    private boolean banned;
-    private int loanLimit;
-    private ArrayList<Object[]> userLoans;
+    private ReportMenuController controller;
     /**
      * Creates new form MenuAcciones
      */
-    public LoansMenu(String code) {
+    public ReportMenu(String code) {
         initComponents();
         this.code = code;
-        controller = new LoanMenuController();
-        loanLimit = Integer.parseInt(controller.buscar(code).get(0)[1].toString());
-        userLoans = controller.getLoans(code);
-        for (int i = 0; i < userLoans.size(); i++) {
-            if(userLoans.get(i)[2].toString().equals(Loan.DEVUELTO) || userLoans.get(i)[2].toString().equals(Loan.ATRASADO)){
-                continue;
-            }
-            java.util.Date hoyD = new java.util.Date();
-            int codeLoan = Integer.parseInt(userLoans.get(i)[0].toString());
-            Date hoy = new Date(hoyD.getTime());
-            Date fechaDevolucion = (Date) userLoans.get(i)[1];
-            if(hoy.after(fechaDevolucion)){
-                controller.bannUser(codeLoan, code);
-            }
-        }
-        banned = Boolean.parseBoolean(controller.buscar(code).get(0)[2].toString());
-        System.out.println(banned);
+        controller = new ReportMenuController();
+        
     }
 
     /**
@@ -75,7 +64,7 @@ public class LoansMenu extends javax.swing.JFrame {
 
         JBtnUsuario.setBackground(new java.awt.Color(212, 163, 115));
         JBtnUsuario.setForeground(new java.awt.Color(255, 255, 255));
-        JBtnUsuario.setText("Gestionar mis prestamos");
+        JBtnUsuario.setText("Historial de transacciones");
         JBtnUsuario.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 JBtnUsuarioActionPerformed(evt);
@@ -94,7 +83,7 @@ public class LoansMenu extends javax.swing.JFrame {
 
         jButton1.setBackground(new java.awt.Color(212, 163, 115));
         jButton1.setForeground(new java.awt.Color(255, 255, 255));
-        jButton1.setText("Realizar un prestamo");
+        jButton1.setText("Prestamos y devoluciones");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -124,7 +113,6 @@ public class LoansMenu extends javax.swing.JFrame {
 
     private void JBtnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JBtnVolverActionPerformed
         // TODO add your handling code here:
-
         Menu main = new Menu(code);
         main.setVisible(true);
         this.dispose();
@@ -132,23 +120,53 @@ public class LoansMenu extends javax.swing.JFrame {
 
     private void JBtnUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JBtnUsuarioActionPerformed
         // TODO add your handling code here:
-        ManageMyLoans m = new ManageMyLoans(code);
-        m.setVisible(true);
-        this.dispose();
+        ArrayList<Object[]> list = controller.getList();
+        Document documento = new Document();
+        String nombre = JOptionPane.showInputDialog(this, "Ingerse el nombre del arichivo");
+        try {
+            // Obtener la ruta del directorio de inicio del usuario
+            String ruta = System.getProperty("user.home");
+
+            // Crear un escritor PDF que escribirá en un archivo en el escritorio del usuario
+            PdfWriter.getInstance(documento, new FileOutputStream(ruta+"/Downloads/"+nombre+".pdf"));
+            // Abrir el documento para escribir en él
+            documento.open();
+
+            // Crear una tabla con 3 columnas
+            PdfPTable tabla = new PdfPTable(4);
+
+            // Agregar encabezados a la tabla
+            tabla.addCell("ID");
+            tabla.addCell("Quien");
+            tabla.addCell("Cuando");
+            tabla.addCell("Que");
+
+            // Agregar datos de un estudiante a la tabla
+            for (int i = 0; i < list.size(); i++) {
+                tabla.addCell(list.get(i)[0].toString());
+                tabla.addCell(controller.getName(list.get(i)[1].toString()));
+                tabla.addCell(list.get(i)[2].toString());
+                tabla.addCell(list.get(i)[3].toString());
+                
+            }
+
+            // Agregar la tabla al documento PDF
+            documento.add(tabla);
+
+            // Cerrar el documento PDF
+            documento.close();
+
+            // Mostrar un mensaje emergente de notificación
+            JOptionPane.showMessageDialog(this, "Historial creado.");
+        }catch(DocumentException | HeadlessException | FileNotFoundException e){
+            e.printStackTrace();
+        }
     }//GEN-LAST:event_JBtnUsuarioActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        if(loanLimit==0){
-            JOptionPane.showMessageDialog(this, "Ha alcanzado el limite de prestamos");
-            return;        
-        }        
-        if(banned){
-            JOptionPane.showMessageDialog(this, "No puede realizar prestamos ya que tiene (n) libro(s) sin devolver");
-            return;
-        }
-        LoanBook lb = new LoanBook(code);
-        lb.setVisible(true);
+        LoansReports rp = new LoansReports(code);
+        rp.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -169,14 +187,23 @@ public class LoansMenu extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(LoansMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ReportMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(LoansMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ReportMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(LoansMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ReportMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(LoansMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ReportMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+
+        //</editor-fold>
+        //</editor-fold>
+
+        //</editor-fold>
+        //</editor-fold>
+
         //</editor-fold>
         //</editor-fold>
 

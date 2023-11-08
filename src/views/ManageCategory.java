@@ -172,7 +172,7 @@ public class ManageCategory extends javax.swing.JFrame {
         }
         String Nombre = JTxtNombre.getText();
         Gender gender = new Gender(Nombre);
-        controller.guardar(gender);
+        controller.guardar(gender, codeLogIn);
         genders = controller.buscar(-1);
         updateTable();
     }//GEN-LAST:event_JBtnGuardarActionPerformed
@@ -186,7 +186,7 @@ public class ManageCategory extends javax.swing.JFrame {
         int code = Integer.parseInt(JTxtCodigo.getText());
         String nombre = JTxtNombre.getText();
         Gender gender = new Gender(code,nombre);
-        controller.editar(gender);
+        controller.editar(gender, codeLogIn);
         genders = controller.buscar(-1);
         updateTable();
     }//GEN-LAST:event_JBtnEditarActionPerformed
@@ -199,7 +199,7 @@ public class ManageCategory extends javax.swing.JFrame {
             return;
         }
         int code = Integer.parseInt(JTxtCodigo.getText());
-        controller.eliminar(code);
+        controller.eliminar(code, codeLogIn);
         genders = controller.buscar(-1);
         updateTable();
     }//GEN-LAST:event_JBtnEliminarActionPerformed

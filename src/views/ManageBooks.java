@@ -227,7 +227,7 @@ public class ManageBooks extends javax.swing.JFrame {
             java.util.Date publicationYearUt = year.parse(publicationYearS);
             Date publicationYear = new java.sql.Date(publicationYearUt.getTime());
             Book book = new Book( title, writer, gender, quantityCopies,publicationYear);
-            controller.guardar(book);
+            controller.guardar(book, codeLogIn);
             books = controller.list(-1);
             updateTable();
         } catch (ParseException ex) {
@@ -242,7 +242,7 @@ public class ManageBooks extends javax.swing.JFrame {
             return;
         }
         int code = Integer.parseInt(JTxtCodigo.getText());
-        controller.eliminar(code);
+        controller.eliminar(code, codeLogIn);
         books = controller.list(code);
         updateTable();
     }//GEN-LAST:event_DeleteBtnActionPerformed
@@ -263,7 +263,7 @@ public class ManageBooks extends javax.swing.JFrame {
             java.util.Date publicationYearUt = year.parse(publicationYearS);
             Date publicationYear = new java.sql.Date(publicationYearUt.getTime());
             Book book = new Book(code, title, writer, gender, quantityCopies,publicationYear);
-            controller.editar(book);
+            controller.editar(book, codeLogIn);
             books = controller.list(-1);
             updateTable();
         } catch (ParseException ex) {

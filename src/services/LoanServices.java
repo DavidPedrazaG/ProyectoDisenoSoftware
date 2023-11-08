@@ -63,6 +63,15 @@ public class LoanServices implements Service{
         return null;
     }
     
+    public ResultSet searchLoanByFilters(String search){
+        try {
+            rs = stmt.executeQuery("SELECT * FROM loans" + search);
+            return rs;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
     
     public ResultSet searchLoanByUser(String code) {
         String where = "";

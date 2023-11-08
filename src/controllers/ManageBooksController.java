@@ -10,9 +10,11 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import models.Book;
+import models.TransactionHistory;
 
 import services.BookServices;
 import services.GenderServices;
+import services.TransactionService;
 
 /**
  *
@@ -67,16 +69,22 @@ public class ManageBooksController {
         return books;
     }
     
-    public void guardar(Book book){
+    public void guardar(Book book, String code){
         BookServices.getINSTANCE().create(book);
+        TransactionHistory th = new TransactionHistory(code, "Registró un nuevo libro");
+        TransactionService.getINSTANCE().create(th);
     }
     
-    public void editar(Book book){
+    public void editar(Book book, String code){
         BookServices.getINSTANCE().update(book);
+        TransactionHistory th = new TransactionHistory(code, "Modifico un libro");
+        TransactionService.getINSTANCE().create(th);
     }
     
-    public void eliminar(int code){
+    public void eliminar(int code, String user){
         BookServices.getINSTANCE().delete(code);
+        TransactionHistory th = new TransactionHistory(user, "Elimino un libro");
+        TransactionService.getINSTANCE().create(th);
     }
    
 }

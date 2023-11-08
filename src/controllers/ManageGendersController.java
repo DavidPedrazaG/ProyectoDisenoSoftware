@@ -8,8 +8,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import models.Gender;
+import models.TransactionHistory;
 
 import services.GenderServices;
+import services.TransactionService;
 
 /**
  *
@@ -36,16 +38,22 @@ public class ManageGendersController {
         return genders;
     }
     
-    public void guardar(Gender gender){
+    public void guardar(Gender gender, String user){
         GenderServices.getINSTANCE().create(gender);
+        TransactionHistory th = new TransactionHistory(user, "Registró un nuevo genero");
+        TransactionService.getINSTANCE().create(th);
     }
     
-    public void editar(Gender gender){
+    public void editar(Gender gender, String code){
         GenderServices.getINSTANCE().update(gender);
+        TransactionHistory th = new TransactionHistory(code, "Edito un genero");
+        TransactionService.getINSTANCE().create(th);
     }
     
-    public void eliminar(int code){
+    public void eliminar(int code, String user){
         GenderServices.getINSTANCE().delete(code);
+        TransactionHistory th = new TransactionHistory(user, "Eliminó un genero");
+        TransactionService.getINSTANCE().create(th);
     }
     
 }

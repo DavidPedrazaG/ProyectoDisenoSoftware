@@ -251,7 +251,7 @@ public class ManageUsers extends javax.swing.JFrame {
         String cellphone = txtTelefono.getText();
         String password = txtPassword.getText();
         User user = new User(code, name, lastname, cellphone, password, 4);
-        controller.guardar(user);
+        controller.guardar(user, codeLogIn);
         users = controller.buscar("");
         updateTable();
     }//GEN-LAST:event_insertBtnActionPerformed
@@ -263,7 +263,7 @@ public class ManageUsers extends javax.swing.JFrame {
             return;
         }
         String code = txtCode.getText();
-        controller.eliminar(code);
+        controller.eliminar(code, codeLogIn);
         if(code.equals(codeLogIn)){
             Main main = new Main();
             main.setVisible(true);
@@ -286,7 +286,7 @@ public class ManageUsers extends javax.swing.JFrame {
         String password = txtPassword.getText();
         int loanLimit = searchLoanLimit(code);
         User user = new User(code, name, lastname, cellphone, password, loanLimit);
-        controller.editar(user);
+        controller.editar(user, codeLogIn);
         users = controller.buscar("");
         updateTable();
     }//GEN-LAST:event_updateBtnActionPerformed

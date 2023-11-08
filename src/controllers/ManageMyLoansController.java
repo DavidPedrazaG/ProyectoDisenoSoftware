@@ -9,9 +9,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import models.Book;
 import models.Loan;
+import models.TransactionHistory;
 import models.User;
 import services.BookServices;
 import services.LoanServices;
+import services.TransactionService;
 import services.UserServices;
 
 /**
@@ -68,11 +70,13 @@ public class ManageMyLoansController {
         return loans;
     }
     
-    public void returnBooks(int codeL, Book book, User user, boolean banned){
+    public void returnBooks(int codeL, Book book, User user, boolean banned, String code){
         LoanServices.getINSTANCE().changeStatus(codeL, Loan.DEVUELTO);
         UserServices.getINSTANCE().changeBannStatus(user.getCode(), banned);
         UserServices.getINSTANCE().plusLoanLimit(user);
         BookServices.getINSTANCE().plusQuantityCopies(book);
+        TransactionHistory th = new TransactionHistory(code, "Devolvio un libro");
+        TransactionService.getINSTANCE().create(th);
     }
     
 }

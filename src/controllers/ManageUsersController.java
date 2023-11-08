@@ -11,6 +11,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import models.TransactionHistory;
+import services.TransactionService;
 
 /**
  *
@@ -40,16 +42,22 @@ public class ManageUsersController {
         return users;
     }
     
-    public void guardar(User user){
+    public void guardar(User user, String code){
         UserServices.getINSTANCE().create(user);
+        TransactionHistory th = new TransactionHistory(code, "Registró un nuevo usuario");
+        TransactionService.getINSTANCE().create(th);
     }
     
-    public void editar(User user){
+    public void editar(User user, String code){
         UserServices.getINSTANCE().update(user);
+        TransactionHistory th = new TransactionHistory(code, "Editó un usuario");
+        TransactionService.getINSTANCE().create(th);
     }
     
-    public void eliminar(String code){
+    public void eliminar(String code, String user){
         UserServices.getINSTANCE().delete(code);
+        TransactionHistory th = new TransactionHistory(user, "Eliminó un usuario");
+        TransactionService.getINSTANCE().create(th);
     }
     
 }

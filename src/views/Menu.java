@@ -97,7 +97,7 @@ public class Menu extends javax.swing.JFrame {
         jPanel1.add(jSeparator4, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 120, 130, 10));
 
         JBtnFilter.setBackground(new java.awt.Color(212, 163, 115));
-        JBtnFilter.setText("Filter");
+        JBtnFilter.setText("Reportes");
         JBtnFilter.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 JBtnFilterActionPerformed(evt);
@@ -166,7 +166,7 @@ public class Menu extends javax.swing.JFrame {
 
     private void JBtnFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JBtnFilterActionPerformed
         // TODO add your handling code here:
-        BooksFilter bf = new BooksFilter(codeLogIn);
+        ReportMenu bf = new ReportMenu(codeLogIn);
         bf.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_JBtnFilterActionPerformed

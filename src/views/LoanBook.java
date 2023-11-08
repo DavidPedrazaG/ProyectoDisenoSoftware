@@ -217,7 +217,7 @@ public class LoanBook extends javax.swing.JFrame {
             return;
         }
         Book book = new Book(Integer.parseInt(books.get(row)[0].toString()), Integer.parseInt(books.get(row)[2].toString()));
-        controller.loanBook(loan, book, user);
+        controller.loanBook(loan, book, user, codeLogIn);
         updateTable();
     }//GEN-LAST:event_jButton2ActionPerformed
 
