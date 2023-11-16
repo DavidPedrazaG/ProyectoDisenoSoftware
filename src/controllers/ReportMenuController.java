@@ -23,11 +23,11 @@ public class ReportMenuController {
         try{
             ResultSet rs = TransactionService.getINSTANCE().search(null);
             while(rs.next()){
-                int id = rs.getInt("id");
                 String who = rs.getString("who_code");
                 Timestamp when = rs.getTimestamp("when");
                 String what = rs.getString("what");
-                Object[] ob = {id, who, when, what};
+                String whoName = getName(who);
+                Object[] ob = {whoName, when, what};
                 list.add(ob);
             }
         }catch (SQLException ex) {

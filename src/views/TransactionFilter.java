@@ -8,10 +8,13 @@ import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+import controllers.ReportMenuController;
 import java.awt.HeadlessException;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -19,16 +22,22 @@ import javax.swing.JOptionPane;
  */
 public class TransactionFilter extends javax.swing.JFrame {
     
-      private String codeLogIn;
-    
+    private String codeLogIn;
+    private DefaultTableModel model;
+    private ReportMenuController controller;
+    private ArrayList<Object[]> list;
+    private String actualBox;
     /**
      * Creates new form TransactionFilter
      */
     public TransactionFilter(String code) {
         initComponents();
         this.codeLogIn = code;
-        
-        
+        model = (DefaultTableModel) table.getModel();
+        controller = new ReportMenuController();
+        list = controller.getList();
+        actualBox = actBox.getSelectedItem().toString();
+        actualizarTabla();        
     }
 
     /**
@@ -41,11 +50,11 @@ public class TransactionFilter extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        actBox = new javax.swing.JComboBox<>();
         jLabel1 = new javax.swing.JLabel();
         JBtnVolver = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        table = new javax.swing.JTable();
         JBtnRegistro = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -53,9 +62,14 @@ public class TransactionFilter extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(250, 237, 205));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jComboBox1.setBackground(new java.awt.Color(204, 213, 174));
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Registro un nuevo usuario", "Edito un  usuario", "Elimino un  usuario", "Devolvio un libro", "Registro un nuevo genero", "Edito un genero", "Elimino un genero", "Registro un nuevo libro", "Modifico un libro", "Elimino un libro", "Pidio prestado un libro" }));
-        jPanel1.add(jComboBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 180, -1, -1));
+        actBox.setBackground(new java.awt.Color(204, 213, 174));
+        actBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { " ", "Registro un nuevo usuario", "Edito un  usuario", "Elimino un  usuario", "Devolvio un libro", "Registro un nuevo genero", "Edito un genero", "Elimino un genero", "Registro un nuevo libro", "Modifico un libro", "Elimino un libro", "Pidio prestado un libro", "Inició sesión" }));
+        actBox.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                actBoxItemStateChanged(evt);
+            }
+        });
+        jPanel1.add(actBox, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 100, -1, -1));
 
         jLabel1.setText("Transacciones:");
         jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 20, -1, -1));
@@ -69,19 +83,27 @@ public class TransactionFilter extends javax.swing.JFrame {
         });
         jPanel1.add(JBtnVolver, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 440, 80, -1));
 
-        jTable1.setBackground(new java.awt.Color(204, 213, 174));
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        table.setBackground(new java.awt.Color(204, 213, 174));
+        table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Quien", "Cuando", "What"
             }
-        ));
-        jScrollPane1.setViewportView(jTable1);
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(table);
 
         jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 30, 500, -1));
 
@@ -92,7 +114,7 @@ public class TransactionFilter extends javax.swing.JFrame {
                 JBtnRegistroActionPerformed(evt);
             }
         });
-        jPanel1.add(JBtnRegistro, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 300, 200, -1));
+        jPanel1.add(JBtnRegistro, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 140, 200, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -118,7 +140,7 @@ public class TransactionFilter extends javax.swing.JFrame {
 
     private void JBtnRegistroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JBtnRegistroActionPerformed
         // TODO add your handling code here:
-         Document documento = new Document();
+        Document documento = new Document();
         String nombre = JOptionPane.showInputDialog(this, "Ingerse el nombre del arichivo");
         try {
             // Obtener la ruta del directorio de inicio del usuario
@@ -130,28 +152,18 @@ public class TransactionFilter extends javax.swing.JFrame {
             documento.open();
 
             // Crear una tabla con 3 columnas
-            PdfPTable tabla = new PdfPTable(7);
+            PdfPTable tabla = new PdfPTable(3);
 
             // Agregar encabezados a la tabla
-            tabla.addCell("Nombre Usuario");
-            tabla.addCell("ID Usuario");
-            tabla.addCell("Nombre Libro");
-            tabla.addCell("Fecha prestamo");
-            tabla.addCell("Fecha devolucion");
-            tabla.addCell("Categoria");
-            tabla.addCell("Estado");
+            tabla.addCell("Quien");
+            tabla.addCell("Cuando");
+            tabla.addCell("Que");
 
             // Agregar datos de un estudiante a la tabla
             for (int i = 0; i < model.getRowCount(); i++) {
                 tabla.addCell(model.getValueAt(i, 0).toString());
                 tabla.addCell(model.getValueAt(i, 1).toString());
                 tabla.addCell(model.getValueAt(i, 2).toString());
-                tabla.addCell(model.getValueAt(i, 3).toString());
-                tabla.addCell(model.getValueAt(i, 4).toString());
-                tabla.addCell(model.getValueAt(i, 5).toString());
-                tabla.addCell(model.getValueAt(i, 6).toString());
-                
-
             }
 
             // Agregar la tabla al documento PDF
@@ -161,12 +173,42 @@ public class TransactionFilter extends javax.swing.JFrame {
             documento.close();
 
             // Mostrar un mensaje emergente de notificación
-            JOptionPane.showMessageDialog(this, "Reporte creado.");
+            JOptionPane.showMessageDialog(this, "Historial creado.");
         }catch(DocumentException | HeadlessException | FileNotFoundException e){
             e.printStackTrace();
         }
     }//GEN-LAST:event_JBtnRegistroActionPerformed
 
+    private void actBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_actBoxItemStateChanged
+        // TODO add your handling code here:
+        actualBox = actBox.getSelectedItem().toString();
+        actualizarTabla();
+    }//GEN-LAST:event_actBoxItemStateChanged
+
+    private void actualizarTabla(){
+        try {
+            for (int i = 0; i < 10; i++) {
+                for (int j = 0; j < model.getRowCount(); j++) {
+                    model.removeRow(j);
+                }
+            }
+        } catch (Exception e) {
+        }
+        try {
+            for (int i = 0; i < list.size(); i++) {
+                if(actualBox.equals(" ")){
+                    model.addRow(list.get(i));
+                }
+                else{
+                    if(list.get(i)[2].toString().equals(actualBox)){
+                        model.addRow(list.get(i));
+                    }
+                }
+            }
+        } catch (Exception e) {
+        }        
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -201,10 +243,10 @@ public class TransactionFilter extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton JBtnRegistro;
     private javax.swing.JButton JBtnVolver;
-    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JComboBox<String> actBox;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable table;
     // End of variables declaration//GEN-END:variables
 }

@@ -120,47 +120,9 @@ public class ReportMenu extends javax.swing.JFrame {
 
     private void JBtnUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JBtnUsuarioActionPerformed
         // TODO add your handling code here:
-        ArrayList<Object[]> list = controller.getList();
-        Document documento = new Document();
-        String nombre = JOptionPane.showInputDialog(this, "Ingerse el nombre del arichivo");
-        try {
-            // Obtener la ruta del directorio de inicio del usuario
-            String ruta = System.getProperty("user.home");
-
-            // Crear un escritor PDF que escribirá en un archivo en el escritorio del usuario
-            PdfWriter.getInstance(documento, new FileOutputStream(ruta+"/Downloads/"+nombre+".pdf"));
-            // Abrir el documento para escribir en él
-            documento.open();
-
-            // Crear una tabla con 3 columnas
-            PdfPTable tabla = new PdfPTable(4);
-
-            // Agregar encabezados a la tabla
-            tabla.addCell("ID");
-            tabla.addCell("Quien");
-            tabla.addCell("Cuando");
-            tabla.addCell("Que");
-
-            // Agregar datos de un estudiante a la tabla
-            for (int i = 0; i < list.size(); i++) {
-                tabla.addCell(list.get(i)[0].toString());
-                tabla.addCell(controller.getName(list.get(i)[1].toString()));
-                tabla.addCell(list.get(i)[2].toString());
-                tabla.addCell(list.get(i)[3].toString());
-                
-            }
-
-            // Agregar la tabla al documento PDF
-            documento.add(tabla);
-
-            // Cerrar el documento PDF
-            documento.close();
-
-            // Mostrar un mensaje emergente de notificación
-            JOptionPane.showMessageDialog(this, "Historial creado.");
-        }catch(DocumentException | HeadlessException | FileNotFoundException e){
-            e.printStackTrace();
-        }
+        TransactionFilter tf = new TransactionFilter(code);
+        tf.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_JBtnUsuarioActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
