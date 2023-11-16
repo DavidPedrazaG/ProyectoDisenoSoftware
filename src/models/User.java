@@ -45,7 +45,17 @@ public class User {
     public User(String code, int loanLimit) {
         this.code = code;
         this.loanLimit = loanLimit;
-    }    
+    } 
+
+    public User(String code, String name, String lastname, String cellphone, String password) {
+        this.code = code;
+        this.name = name;
+        this.lastname = lastname;
+        this.cellphone = cellphone;
+        this.password = password;
+    }
+    
+    
     
     public String getCode() {
         return code;
