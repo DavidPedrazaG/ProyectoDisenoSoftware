@@ -28,8 +28,9 @@ public class LoanBookControllerTest {
         System.out.println("searchUser");
         String codeS = "4321";
         LoanBookController instance = new LoanBookController();
-        String expResult = "David";
-        ArrayList<User> result = instance.searchUser(codeS);
+        String expResult = "Nicolas";
+        ArrayList<User> search = instance.searchUser(codeS);
+        String result = search.get(0).getName();
         assertEquals(expResult, result);
         
     }

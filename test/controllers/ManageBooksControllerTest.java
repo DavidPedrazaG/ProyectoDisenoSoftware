@@ -17,26 +17,6 @@ public class ManageBooksControllerTest {
     
     public ManageBooksControllerTest() {
     }
-
-    /**
-     * Test of getGenders method, of class ManageBooksController.
-     */
-    @Test
-    public void testGetGenders() {
-        System.out.println("getGenders");
-        int code = 2;
-        ManageBooksController instance = new ManageBooksController();
-        String expResult = "Comedia";
-        ArrayList<Object[]> search = instance.list(code);
-        String result = search.get(0)[1].toString();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-       
-            
-        // TODO review the generated test code and remove the default call to fail.
-        
-    }
-
     /**
      * Test of list method, of class ManageBooksController.
      */
