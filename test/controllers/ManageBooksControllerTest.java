@@ -24,12 +24,17 @@ public class ManageBooksControllerTest {
     @Test
     public void testGetGenders() {
         System.out.println("getGenders");
+        int code = 2;
         ManageBooksController instance = new ManageBooksController();
-        ArrayList expResult = null;
-        ArrayList result = instance.getGenders();
+        String expResult = "Comedia";
+        ArrayList<Object[]> search = instance.list(code);
+        String result = search.get(0)[1].toString();
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+       
+            
+        // TODO review the generated test code and remove the default call to fail.
+        
     }
 
     /**
@@ -45,7 +50,7 @@ public class ManageBooksControllerTest {
         String result = search.get(0)[1].toString();
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+       
     }
 
    

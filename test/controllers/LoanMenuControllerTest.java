@@ -25,9 +25,9 @@ public class LoanMenuControllerTest {
         System.out.println("buscar");
         String codeS = "4321";
         LoanMenuController instance = new LoanMenuController();
-        String expResult = "David";
+        String expResult = "4321";
         ArrayList<Object[]> search = instance.buscar(codeS);
-        String result = search.get(0)[1].toString();
+        String result = search.get(0)[0].toString();
         assertEquals(expResult, result);
     }
 

@@ -43,7 +43,7 @@ public class LoansReportControllerTest {
         LoansReportController instance = new LoansReportController();
         String expResult = "Holi";
          ArrayList<Object[]> search = instance.searchBook(code);
-        String result = search.get(0)[1].toString();
+        String result = search.get(0)[0].toString();
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         
